@@ -23,7 +23,6 @@
 
         # Terminals
         kitty.enable = true;
-        alacritty.enable = true;
         foot.enable = true;
         wezterm.enable = true;
         ghostty.enable = true;
@@ -48,7 +47,6 @@
         zathura.enable = true;       # PDF viewer
         vifm.enable = true;          # file manager
         yazi.enable = true;          # file manager
-        nixvim.enable = true;        # if you use nixvim
         tmux.enable = true;          # terminal multiplexer
         zellij.enable = true;        # terminal multiplexer
       };
