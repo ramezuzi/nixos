@@ -15,40 +15,6 @@
         # Desktop environments / Window managers
         gtk.enable = true;
         qt.enable = true;
-        hyprland.enable = true;      # if you use Hyprland
-        waybar.enable = true;        # if you use Waybar
-        rofi.enable = true;          # if you use Rofi
-        wofi.enable = true;          # if you use Wofi
-        tofi.enable = true;          # if you use Tofi
-
-        # Terminals
-        kitty.enable = true;
-        foot.enable = true;
-        wezterm.enable = true;
-        ghostty.enable = true;
-
-        # Editors
-        neovim.enable = true;
-        vim.enable = true;
-        vscode.enable = true;
-
-        # Browsers
-        firefox.enable = true;
-        chromium.enable = true;
-        qutebrowser.enable = true;
-
-        # Other apps
-        bat.enable = true;           # bat cat replacement
-        btop.enable = true;          # system monitor
-        dunst.enable = true;         # notification daemon
-        fzf.enable = true;           # fuzzy finder
-        lazygit.enable = true;       # git TUI
-        mpv.enable = true;           # media player
-        zathura.enable = true;       # PDF viewer
-        vifm.enable = true;          # file manager
-        yazi.enable = true;          # file manager
-        tmux.enable = true;          # terminal multiplexer
-        zellij.enable = true;        # terminal multiplexer
       };
 
       # Your custom Koda Monochrome palette
