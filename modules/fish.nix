@@ -4,8 +4,9 @@
   lib,
   config,
   ...
-}: {
-  flake.homeModules.fish = {pkgs, ...}: {
+}:
+{
+  flake.homeModules.fish = { pkgs, ... }: {
     programs.fish = {
       enable = true;
 
@@ -62,7 +63,7 @@
         vs = "hx ~/nixos/modules/stylix.nix";
 
         # nh
-        nh = "nh os switch -u ~/nixos --hostname zbook";
+        nh = "nh os switch ~/nixos --hostname zbook";
       };
 
       interactiveShellInit = ''

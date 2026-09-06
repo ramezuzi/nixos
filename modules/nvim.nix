@@ -1,5 +1,5 @@
 { inputs, self, ... }: {
-  flake.nixosMoudles.nvim = { pkgs, config, ... }: {
+  flake.nixosModules.nvim = { pkgs, config, ... }: {
     environment.systemPackages = [
       (pkgs.writeShellScriptBin "v" ''
         exec ${pkgs.neovim}/bin/nvim -u ~/.config/nvim-salar/init.lua "$@"
