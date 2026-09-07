@@ -11,7 +11,7 @@
           owner = "amanhex";
           repo = "ukishima";
           rev = "master";
-          hash = "sha256-lkNV/TmAyqbbipts00Ix22WVX0chtOAjj0ezePrWr/Y=";
+          hash = "sha256-Y2ALe3/dE2bvfxfZx21SGu/5wHnbvYIKYo8F5zjVouc=";
         };
 
         nativeBuildInputs = [ pkgs.makeWrapper ];
