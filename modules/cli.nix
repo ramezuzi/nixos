@@ -103,6 +103,16 @@
     home.packages = with pkgs; [
       # Same list as above – these will be installed for your user
       # You can add user-specific tools here
+      kubectx          # provides both kubectx and kubens
+      kubernetes-helm  # provides the `helm` binary
+      stern
+      kustomize
+      yq
+      tflint
+      terraform-docs
+      pre-commit
+      just
+      devenv
     ];
   };
 }

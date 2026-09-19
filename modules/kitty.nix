@@ -15,6 +15,7 @@
         allow_remote_control = true;
         cursor_shape = "block";
         cursor_blink_interval = 0;
+      	cursor_trail = 1;
       };
     };
   };
