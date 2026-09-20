@@ -107,12 +107,15 @@
       kubernetes-helm  # provides the `helm` binary
       stern
       kustomize
-      yq
       tflint
       terraform-docs
       pre-commit
       just
       devenv
+      bun
+      uv
+      uv-sort
+      ruff
     ];
   };
 }
