@@ -1,4 +1,10 @@
-{ inputs, pkgs, lib, config, ... }:
+{
+  inputs,
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 {
   # ----------------------------------------------------------------------
@@ -7,45 +13,45 @@
   flake.nixosModules.tools = { pkgs, ... }: {
     environment.systemPackages = with pkgs; [
       # ---- GNU Core Utilities ----
-      coreutils      # ls, cp, mv, rm, cat, etc.
-      findutils      # find, xargs
-      gnugrep        # grep with GNU extensions
-      gnused         # sed
-      gawk           # awk
-      gnutar         # tar
-      gzip           # gzip, gunzip
-      diffutils      # diff, cmp
-      file           # file type detection
+      coreutils # ls, cp, mv, rm, cat, etc.
+      findutils # find, xargs
+      gnugrep # grep with GNU extensions
+      gnused # sed
+      gawk # awk
+      gnutar # tar
+      gzip # gzip, gunzip
+      diffutils # diff, cmp
+      file # file type detection
 
       # ---- Modern Replacements ----
-      bat            # better cat with syntax highlighting
-      eza            # modern ls with icons and git status
-      ripgrep        # faster grep (rg)
-      fd             # faster find (fd)
-      jq             # JSON processor
-      yq-go          # YAML/JSON/XML processor
-      fzf            # fuzzy finder
-      zoxide         # smarter cd (z)
-      atuin          # shell history with SQLite
-      duf            # disk usage viewer
-      ncdu           # disk usage analyzer (TUI)
-      btop           # resource monitor (better than htop)
-      procs          # better ps
+      bat # better cat with syntax highlighting
+      eza # modern ls with icons and git status
+      ripgrep # faster grep (rg)
+      fd # faster find (fd)
+      jq # JSON processor
+      yq-go # YAML/JSON/XML processor
+      fzf # fuzzy finder
+      zoxide # smarter cd (z)
+      atuin # shell history with SQLite
+      duf # disk usage viewer
+      ncdu # disk usage analyzer (TUI)
+      btop # resource monitor (better than htop)
+      procs # better ps
 
       # ---- Networking ----
       curl
       wget
-      mtr            # traceroute + ping
-      nmap           # network scanner
+      mtr # traceroute + ping
+      nmap # network scanner
       netcat-openbsd # netcat (nc)
-      dig            # DNS lookup (from bind)
+      dig # DNS lookup (from bind)
       whois
-      httpie         # HTTP client (http)
-      prettyping     # prettier ping
+      httpie # HTTP client (http)
+      prettyping # prettier ping
 
       # ---- Compression ----
       unzip
-      p7zip          # 7z
+      p7zip # 7z
       unrar
       gzip
       bzip2
@@ -60,7 +66,7 @@
       kustomize
       argocd
       fluxcd
-      opentofu       # open-source Terraform
+      opentofu # open-source Terraform
       terraform
       terragrunt
       terraform-docs
@@ -82,8 +88,8 @@
 
       # ---- Development ----
       git
-      lazygit        # TUI for git
-      gh             # GitHub CLI
+      lazygit # TUI for git
+      gh # GitHub CLI
       gnumake
       gcc
       binutils
@@ -91,8 +97,8 @@
       # ---- Observability ----
       hcl2json
       graphviz
-      age            # encryption
-      sops           # secrets management
+      age # encryption
+      sops # secrets management
     ];
   };
 
@@ -103,8 +109,8 @@
     home.packages = with pkgs; [
       # Same list as above – these will be installed for your user
       # You can add user-specific tools here
-      kubectx          # provides both kubectx and kubens
-      kubernetes-helm  # provides the `helm` binary
+      kubectx # provides both kubectx and kubens
+      kubernetes-helm # provides the `helm` binary
       stern
       kustomize
       tflint
@@ -116,6 +122,12 @@
       uv
       uv-sort
       ruff
+      tealdeer
+      dust
+      bottom
+      delta
+      nvd
+
     ];
   };
 }
