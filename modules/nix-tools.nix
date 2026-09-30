@@ -1,9 +1,9 @@
 { inputs, self, ... }: {
   flake.nixosModules.nixTools = { pkgs, ... }: {
+  	  imports = [ inputs.nixos-cli.nixosModules.nixos-cli ];
     environment.systemPackages = with pkgs; [
       comma
       nix-index
-      nix-index-database
       nurl
       nix-init
       nix-output-monitor
@@ -13,6 +13,5 @@
       statix
       deadnix
     ];
-    programs.command-not-found.enable = true;
   };
 }
