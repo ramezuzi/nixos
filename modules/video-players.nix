@@ -1,7 +1,7 @@
 { ... }:
 {
-  flake.homeModules.video-players = { pkgs, ... }: {
-    home.Packages = with pkgs; [
+  flake.homeModules.video-playrs= { pkgs, ... }: {
+    home.packages = with pkgs; [
       mpv        # core player — terminal output built in, no config needed: mpv --vo=tct file.mp4
       vlc        # also has a real TUI: vlc -I ncurses
       celluloid  # GTK frontend for mpv

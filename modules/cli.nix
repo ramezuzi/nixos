@@ -99,6 +99,20 @@
       graphviz
       age # encryption
       sops # secrets management
+
+      # ---- New Tools ---- 
+
+      zenith         # TUI system monitor with disk/network graphs
+      bandwhich      # Network usage per process
+      iotop          # IO monitoring
+      iftop          # Network monitoring
+      strace         # System call tracing
+      lsof           # List open files
+      sysstat        # sar, iostat, mpstat
+      lm_sensors     # Temperature sensors
+      ethtool        # Network interface diagnostics
+      pciutils       # lspci
+      usbutils       # lsusb
     ];
   };
 
@@ -127,6 +141,11 @@
       bottom
       delta
       nvd
+      tldr
+      glow
+      chafa
+      asciinema
+      just
 
     ];
   };
