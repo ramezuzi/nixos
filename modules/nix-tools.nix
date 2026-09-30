@@ -7,11 +7,16 @@
       nurl
       nix-init
       nix-output-monitor
-      nixos-cli
       manix
       alejandra
       statix
       deadnix
     ];
+    programs.nixos-cli = {
+      enable = true;
+      settings = {
+        # Whatever settings you want; can be left empty
+      };
+    };
   };
 }
