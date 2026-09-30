@@ -141,7 +141,6 @@
       bottom
       delta
       nvd
-      tldr
       glow
       chafa
       asciinema
