@@ -11,7 +11,7 @@
           owner = "amanhex";
           repo = "ukishima";
           rev = "master";
-          hash = "sha256-7WAqjetTQfPDDqTIXvP+mIt0r/ZKCE3LlZFgX7Cc520=";
+          hash = "sha256-B3GD/XWzhgr5KxtzphuqKh0ToVACk0f0tArcEQA9c2c=";
         };
 
         nativeBuildInputs = [ pkgs.makeWrapper ];
@@ -27,7 +27,8 @@
 
           makeWrapper ${pkgs.quickshell}/bin/quickshell $out/bin/ukishima \
             --add-flags "-p $out/share/ukishima" \
-            --set QML2_IMPORT_PATH "${pkgs.qt6.qt5compat}/lib/qt-6/qml:${pkgs.qt6.qtbase}/lib/qt-6/qml:${pkgs.qt6.qtdeclarative}/lib/qt-6/qml:${pkgs.qt6.qtmultimedia}/lib/qt-6/qml"
+            --set QML2_IMPORT_PATH "${pkgs.qt6.qt5compat}/lib/qt-6/qml:${pkgs.qt6.qtbase}/lib/qt-6/qml:${pkgs.qt6.qtdeclarative}/lib/qt-6/qml:${pkgs.qt6.qtmultimedia}/lib/qt-6/qml:${pkgs.qt6.qtimageformats}/lib/qt-6/qml:${pkgs.qt6.qtsvg}/lib/qt-6/qml" \
+            --prefix PATH : "${pkgs.imagemagick}/bin:${pkgs.ffmpeg}/bin:${pkgs.jq}/bin:${pkgs.coreutils}/bin"
 
           # Stable IPC wrapper – always uses the correct store path
           cat > $out/bin/ukishima-ipc <<EOF

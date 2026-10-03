@@ -6,7 +6,8 @@
       config = {
         style = "full";
         italic-text = "always";
-        pager = "less -FR";
+        pager = "never";
+        color = "always";
       };
       extraPackages = with pkgs.bat-extras; [
         batman
