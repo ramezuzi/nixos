@@ -11,7 +11,7 @@
     ];
 
     
- flake.homeModules.laptop = { pkgs, ... }: {
+ flake.homeModules.services = { pkgs, ... }: {
     home.packages = with pkgs; [
       nvtopPackages.full  # GPU monitor — nixpkgs restructured plain `nvtop` into this
       bluetuith           # TUI bluetooth manager
