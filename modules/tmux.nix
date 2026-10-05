@@ -1,4 +1,3 @@
-# modules/tmux.nix
 { inputs, self, ... }: {
   flake.homeModules.tmux = { pkgs, config, lib, ... }:
     let
@@ -13,9 +12,62 @@
           hash = "sha256-fJwZVkhieKhb+bTkoYjsKf0VEcjHQ5v83u4m7GgaXNc=";   # replace with the hash from nix-prefetch-github
         };
       };
+
+      # Helper script that prints battery + wifi status in one line.
+      # Called from tmux's status-right every 5 seconds.
+      tmux-status = pkgs.writeShellScript "tmux-status" ''
+        # ── Battery ─────────────────────────────────────────────
+        bat=""
+        for b in /sys/class/power_supply/BAT*; do
+          [ -e "$b" ] || continue
+          cap=$(cat "$b/capacity" 2>/dev/null || echo "?")
+          st=$(cat "$b/status"   2>/dev/null || echo "Unknown")
+          case "$st" in
+            Charging)          icon="⚡" ;;
+            Discharging)       icon="🔋" ;;
+            Full)              icon="🔌" ;;
+            Not charging)      icon="🔌" ;;
+            *)                 icon="🔋" ;;
+          esac
+          bat="$icon $cap%"
+          break
+        done
+
+        # ── Wi-Fi ───────────────────────────────────────────────
+        wifi=""
+        if command -v nmcli >/dev/null 2>&1; then
+          wifi_state=$(nmcli -t -f WIFI general 2>/dev/null | cut -d: -f2)
+          if [ "$wifi_state" = "enabled" ]; then
+            ssid=$(nmcli -t -f ACTIVE,SSID dev wifi 2>/dev/null | awk -F: '$1=="yes"{print $2; exit}')
+            if [ -n "$ssid" ]; then
+              wifi="󰤨 $ssid"
+            else
+              wifi="󰤭 off"
+            fi
+          else
+            wifi="󰤮 off"
+          fi
+        else
+          # Fallback: check the first wireless interface's operstate
+          for iface in /sys/class/net/*/wireless; do
+            [ -e "$iface" ] || continue
+            name=$(basename "$(dirname "$iface")")
+            state=$(cat "/sys/class/net/$name/operstate" 2>/dev/null || echo "down")
+            if [ "$state" = "up" ]; then
+              wifi="󰤨 $name"
+            else
+              wifi="󰤮 off"
+            fi
+            break
+          done
+        fi
+
+        # Print with a separator; tmux will render this between the clock and prefix
+        echo "$wifi  $bat"
+      '';
     in
     {
-      # Pre-create the session scripts directory so the plugin finds it
+      # Pre-create the session scripts directory
       home.file.".local/share/tmux/sessions/.keep".text = "";
 
       # Restore captured pane contents when fish starts inside a tmux pane
@@ -59,9 +111,11 @@
           # ── Status bar ────────────────────────────────────────────
           set -g status-left  " #[bold]#S #[nobold]│ "
           set -g status-left-length 30
-          set -g status-right " #{?client_prefix,#[fg=#e0e0e0]PREFIX ,}%H:%M │ %d-%b "
-          set -g status-right-length 60
+          set -g status-right " #{?client_prefix,#[fg=#e0e0e0]PREFIX ,}#(${tmux-status}) │ %H:%M │ %d-%b "
+          set -g status-right-length 100
           set -g status-justify centre
+          set -g status-interval 5
+
           set -g window-status-format         " #I:#W "
           set -g window-status-current-format " #I:#W "
           set -g window-status-separator      ""
