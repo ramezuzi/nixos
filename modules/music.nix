@@ -6,6 +6,7 @@
       ncmpcpp
       mpc
       rmpc
+      spotify
     ];
 
     services.mpd = {
