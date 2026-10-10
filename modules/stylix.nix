@@ -3,6 +3,19 @@
   self,
   ...
 }:
+let
+  # ── Just the theme name ──────────────────────────────────────
+  # Any name from: nix build nixpkgs#base16-schemes --no-link --print-out-paths
+  #                ls "$(that-path)/share/themes/"
+  #
+  # Examples:
+  #   "catppuccin-mocha", "gruvbox-dark-hard", "tokyonight",
+  #   "nord", "dracula", "kanagawa", "oxocarbon-dark", "zenburn",
+  #   "rose-pine", "everforest", "solarized-dark", "github-dark"
+  #
+  theme = "black-metal-mayhem";
+  # ────────────────────────────────────────────────────────────
+in
 {
   flake.nixosModules.stylix = { pkgs, lib, ... }: {
     imports = [ inputs.stylix.nixosModules.stylix ];
@@ -12,30 +25,11 @@
       autoEnable = true;
 
       targets = {
-        # Desktop environments / Window managers
         gtk.enable = true;
         qt.enable = true;
       };
 
-      # Your custom Koda Monochrome palette
-      base16Scheme = {
-        base00 = "080808";  # background
-        base01 = "0c0c0c";  # background alt
-        base02 = "121212";  # inactive border
-        base03 = "1a1a1a";  # selection background / active border
-        base04 = "3d3d3d";  # dark gray (color8)
-        base05 = "a6a6a6";  # foreground / main text
-        base06 = "c4c4c4";  # selection foreground / cursor
-        base07 = "e0e0e0";  # white / lightest (color15)
-        base08 = "4a4a4a";  # red / danger (color1)
-        base09 = "666666";  # yellow / warning (color3)
-        base0A = "848484";  # cyan (color6)
-        base0B = "5c5c5c";  # green (color2)
-        base0C = "848484";  # cyan
-        base0D = "707070";  # blue / highlight (color4)
-        base0E = "7a7a7a";  # magenta / pink (color5)
-        base0F = "8a8a8a";  # url color
-      };
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/${theme}.yaml";
 
       polarity = "dark";
 
@@ -71,7 +65,7 @@
       };
 
       opacity = {
-        terminal = 0.98;        # Match your kitty opacity
+        terminal = 0.98;
         applications = 0.98;
         desktop = 0.98;
         popups = 0.98;

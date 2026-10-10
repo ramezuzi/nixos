@@ -1,76 +1,12 @@
+# modules/tmux.nix
 { inputs, self, ... }: {
   flake.homeModules.tmux = { pkgs, config, lib, ... }:
     let
-      tmux-workspaces = pkgs.tmuxPlugins.mkTmuxPlugin {
-        pluginName = "tmux-workspaces";
-        version = "master";
-        rtpFilePath = "workspaces.tmux";
-        src = pkgs.fetchFromGitHub {
-          owner = "niflostancu";
-          repo = "tmux-workspaces";
-          rev = "master";
-          hash = "sha256-fJwZVkhieKhb+bTkoYjsKf0VEcjHQ5v83u4m7GgaXNc=";   # replace with the hash from nix-prefetch-github
-        };
-      };
-
-      # Helper script that prints battery + wifi status in one line.
-      # Called from tmux's status-right every 5 seconds.
-      tmux-status = pkgs.writeShellScript "tmux-status" ''
-        # ── Battery ─────────────────────────────────────────────
-        bat=""
-        for b in /sys/class/power_supply/BAT*; do
-          [ -e "$b" ] || continue
-          cap=$(cat "$b/capacity" 2>/dev/null || echo "?")
-          st=$(cat "$b/status"   2>/dev/null || echo "Unknown")
-          case "$st" in
-            Charging)          icon="⚡" ;;
-            Discharging)       icon="🔋" ;;
-            Full)              icon="🔌" ;;
-            Not charging)      icon="🔌" ;;
-            *)                 icon="🔋" ;;
-          esac
-          bat="$icon $cap%"
-          break
-        done
-
-        # ── Wi-Fi ───────────────────────────────────────────────
-        wifi=""
-        if command -v nmcli >/dev/null 2>&1; then
-          wifi_state=$(nmcli -t -f WIFI general 2>/dev/null | cut -d: -f2)
-          if [ "$wifi_state" = "enabled" ]; then
-            ssid=$(nmcli -t -f ACTIVE,SSID dev wifi 2>/dev/null | awk -F: '$1=="yes"{print $2; exit}')
-            if [ -n "$ssid" ]; then
-              wifi="󰤨 $ssid"
-            else
-              wifi="󰤭 off"
-            fi
-          else
-            wifi="󰤮 off"
-          fi
-        else
-          # Fallback: check the first wireless interface's operstate
-          for iface in /sys/class/net/*/wireless; do
-            [ -e "$iface" ] || continue
-            name=$(basename "$(dirname "$iface")")
-            state=$(cat "/sys/class/net/$name/operstate" 2>/dev/null || echo "down")
-            if [ "$state" = "up" ]; then
-              wifi="󰤨 $name"
-            else
-              wifi="󰤮 off"
-            fi
-            break
-          done
-        fi
-
-        # Print with a separator; tmux will render this between the clock and prefix
-        echo "$wifi  $bat"
-      '';
+      c = config.lib.stylix.colors.withHashtag;
     in
     {
-      # Pre-create the session scripts directory
       home.file.".local/share/tmux/sessions/.keep".text = "";
 
-      # Restore captured pane contents when fish starts inside a tmux pane
       programs.fish.shellInit = ''
         if test -n "$TMUX_PANE_RESTORE_CMD"
           eval $TMUX_PANE_RESTORE_CMD
@@ -87,92 +23,170 @@
         historyLimit = 50000;
         keyMode = "vi";
         mouse = true;
-        prefix = "C-a";
+        prefix = "C-b";
         sensibleOnTop = true;
 
-        plugins = [ tmux-workspaces ];
+        # NOTE: no `plugins = [...]` here — tpm manages plugins below.
 
         extraConfig = ''
-          # ── True color ────────────────────────────────────────────
-          set -as terminal-features ",*:RGB"
-          set -g default-terminal "tmux-256color"
+		set -g default-terminal "tmux-256color"
+		set -ag terminal-overrides ",xterm-256color:RGB"
+		set -gq allow-passthrough on
 
-          # ── Koda monochrome palette ───────────────────────────────
-          set -g status-style                    "bg=#080808,fg=#a6a6a6"
-          set -g status-left-style               "bg=#0c0c0c,fg=#a6a6a6"
-          set -g status-right-style              "bg=#0c0c0c,fg=#8a8a8a"
-          set -g window-status-style             "bg=#080808,fg=#666666"
-          set -g window-status-current-style     "bg=#1a1a1a,fg=#e0e0e0,bold"
-          set -g pane-border-style               "fg=#1a1a1a"
-          set -g pane-active-border-style        "fg=#3d3d3d"
-          set -g message-style                   "bg=#1a1a1a,fg=#e0e0e0"
-          set -g message-command-style           "bg=#1a1a1a,fg=#e0e0e0"
+		set -g base-index 1
+		set -g pane-base-index 1
+		set -g renumber-windows on
 
-          # ── Status bar ────────────────────────────────────────────
-          set -g status-left  " #[bold]#S #[nobold]│ "
-          set -g status-left-length 30
-          set -g status-right " #{?client_prefix,#[fg=#e0e0e0]PREFIX ,}#(${tmux-status}) │ %H:%M │ %d-%b "
-          set -g status-right-length 100
-          set -g status-justify centre
-          set -g status-interval 5
+		set-option -g prefix C-b
+		set-option -g prefix2 none
 
-          set -g window-status-format         " #I:#W "
-          set -g window-status-current-format " #I:#W "
-          set -g window-status-separator      ""
+		set -g detach-on-destroy off
 
-          # ── Pane numbering ────────────────────────────────────────
-          set -g pane-base-index 1
-          set -g renumber-windows on
-          setw -g aggressive-resize on
+# Utility bindings
+		unbind r
+		bind r source-file ~/.config/tmux/tmux.conf
 
-          # ── Splits ────────────────────────────────────────────────
-          bind | split-window -h -c "#{pane_current_path}"
-          bind - split-window -v -c "#{pane_current_path}"
-          unbind '"'
-          unbind %
+		unbind %
+		bind | split-window -h -c "#{pane_current_path}"
 
-          # ── Vim-style pane navigation ─────────────────────────────
-          bind h select-pane -L
-          bind j select-pane -D
-          bind k select-pane -U
-          bind l select-pane -R
+		unbind '"'
+		bind - split-window -v -c "#{pane_current_path}"
 
-          # ── Resize panes ──────────────────────────────────────────
-          bind -r H resize-pane -L 5
-          bind -r J resize-pane -D 5
-          bind -r K resize-pane -U 5
-          bind -r L resize-pane -R 5
+		unbind v
+		bind v copy-mode
 
-          # ── Copy mode ─────────────────────────────────────────────
-          setw -g mode-keys vi
-          bind -T copy-mode-vi v send -X begin-selection
-          bind -T copy-mode-vi y send -X copy-selection-and-cancel
-          bind -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-and-cancel
+# resizing panes with hjkl
+		bind -r j resize-pane -D 5
+		bind -r k resize-pane -U 5
+		bind -r l resize-pane -R 5
+		bind -r h resize-pane -L 5
 
-          # ── Misc ──────────────────────────────────────────────────
-          set -sg escape-time 0
-          set -g focus-events on
-          setw -g monitor-activity on
-          set -g visual-activity off
-          set -g visual-bell off
-          set -g bell-action none
-          setw -g automatic-rename on
-          setw -g automatic-rename-format "#{b:pane_current_path}"
-          set -g detach-on-destroy off
+# maximize panes
+		bind -r m resize-pane -Z
 
-          # ═══════════════════════════════════════════════════════════
-          # tmux-workspaces
-          # ═══════════════════════════════════════════════════════════
-          set-option -g @workspaces-dir "$XDG_DATA_HOME/tmux/sessions"
-          set-option -g @capture-pane-enable "1"
+# disable kill accept prompt
+		bind x kill-pane
 
-          bind C-j run-shell "#{@workspaces-srcdir}/scripts/fuzzy-workspaces.sh"
+# mouse support
+		set -g mouse on
 
-          set -g command-alias[10] skill='run-shell "#{@workspaces-srcdir}/scripts/kill-session.sh"'
+# vim shell navigations and selects in tmux panes
+		set-window-option -g mode-keys vi
+		bind -T copy-mode-vi 'v' send -X begin-selection
+		bind -T copy-mode-vi 'y' send -X copy-selection
 
-          bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded"
-          bind e new-window -c "#{pane_current_path}"
-        '';
+# Sesh keybinds
+# sesh w/ gum dir selector
+		bind "T" display-popup -E -w 40% "sesh connect \"$(
+    				sesh list -i | gum filter --no-strip-ansi --limit 1 --placeholder 'Pick session' --prompt='🛸 '
+				)\""
+
+# sesh w/ (tmux fzf)
+		bind "K" run-shell "sesh connect \"$(
+        			sesh list --icons | fzf-tmux -p 90%,80% \
+        			--no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
+        			--header '🔑 ^a all | ^t tmux | ^g conf | ^x zoxide | ^d tmux kill | ^f find' \
+        			--bind 'tab:down,btab:up' \
+        			--bind 'ctrl-a:change-prompt(🛸  )+reload(sesh list --icons)' \
+        			--bind 'ctrl-t:change-prompt(◧  )+reload(sesh list -t --icons)' \
+        			--bind 'ctrl-g:change-prompt(⛯  )+reload(sesh list -c --icons)' \
+        			--bind 'ctrl-x:change-prompt(🗃  )+reload(sesh list -z --icons)' \
+        			--bind 'ctrl-f:change-prompt(🔭  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+        			--bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(👽  )+reload(sesh list --icons)' \
+        			--preview-window 'right:45%' \
+        			--preview 'sesh preview {}'
+				)\""
+
+# tmux goodies
+		bind -r f run-shell "tmux neww ~/scripts/tmux-sessionizer.sh"
+		bind n command-prompt "new-session -s '%%'"
+
+# tmux display popups
+		bind C-y display-popup -d "#{pane_current_path}" -w 90% -h 90% -E "yazi" # yazi float
+		bind C-t display-popup -d "#{pane_current_path}" -w 80% -h 80% -E "zsh" # quick floating terminal
+		bind C-g display-popup -d "#{pane-current-path}" -w 90% -h 90% -E "lazygit" # lazygit float
+		bind C-m display-popup -w 95% -h 95% -E "rmpc" # music float
+		bind d display-menu -T "#[align=centre]Config" -x C -y C \
+    		".zshrc"            z  "display-popup -w 85% -h 85% -E 'nvim ~/.zshrc'" \
+    		".zprofile"         p  "display-popup -w 85% -h 85% -E 'nvim ~/.zprofile'" \
+    		".tmux.conf"        t  "display-popup -w 85% -h 85% -E 'nvim ~/.tmux.conf'" \
+    		".nvim"             v  "display-popup -w 95% -h 95% -d "~/dotfiles/nvim/.config/nvim" -E 'nvim ~/dotfiles/nvim/.config/nvim'" \
+    		"quit"              q  ""
+
+# Drag copy using mouse
+		unbind -T copy-mode-vi MouseDragEnd1Pane
+
+# tmux plugin manager 
+		set-environment -g TMUX_PLUGIN_MANAGER_PATH ~/.config/tmux/.tmux/plugins
+		set -g @plugin 'tmux-plugins/tpm' # must be the first plugin
+		set -g @plugin "christoomey/vim-tmux-navigator"
+		set -g @plugin 'omerxx/tmux-sessionx' # default keybind "<prefix> O" to activate
+		set -g @plugin 'niflostancu/tmux-workspaces'
+		set -g @plugin 'tmux-plugins/tmux-online-status'
+		set -g @plugin 'tmux-plugins/tmux-battery'
+
+		set -g @sessionx-bind 'o'
+		set -g @sessionx-git-branch 'on'
+		set -g @sessionx-preview-location 'top'
+		set -g @sessionx-preview-ratio '53%'
+
+
+# Configure Online status
+		set -g @online_icon "ok"
+		set -g @offline_icon "nok"
+
+# status left look and feel
+		set -g status-left-length 100
+		set -g status-left ""
+		set -ga status-left "#{?client_prefix,#{#[bg=#4a4a4a,fg=#080808,bold]  #S },#{#[bg=#080808,fg=#5c5c5c]  #S }}"
+# set -ga status-left "#[bg=#080808,fg=#1a1a1a,none]│"
+# set -ga status-left "#[bg=#080808,fg=#7a7a7a]  #{pane_current_command} "
+
+# set -ga status-left "#[bg=#080808,fg=#1a1a1a,none]│"
+# set -ga status-left "#[bg=#080808,fg=#707070]  #{=/-32/...:#{s|$USER|~|:#{b:pane_current_path}}} "
+		set -ga status-left "#[bg=#080808,fg=#1a1a1a,none]#{?window_zoomed_flag,│,}"
+		set -ga status-left "#[bg=#080808,fg=#666666]#{?window_zoomed_flag,  zoom ,}"
+# set -ga status-left "#[bg=#080808,fg=#1a1a1a]│"
+
+# status right look and feel
+		set -g status-right-length 250
+		set -g status-right ""
+# set -ga status-right "#{?#{e|>=:10,#{battery_percentage}},#{#[bg=#4a4a4a,fg=#080808]},#{#[bg=#080808,fg=#5c5c5c]}} #{battery_icon} #{battery_percentage} "
+# set -ga status-right "#[bg=#080808,fg=#1a1a1a]│"
+		set -ga status-right "#[bg=#080808]#{?#{==:#{online_status},ok},#[fg=#c4c4c4] 󰖩 on ,#[fg=#4a4a4a,bold]#[reverse] 󰖪 off }"
+# set -ga status-right "#[bg=#080808,fg=#1a1a1a, none]│"
+# set -ga status-right "#[bg=#080808,fg=#707070] 󰭦 %Y-%m-%d 󰅐 %H:%M "
+
+
+# Configure Tmux
+		set -g status-position bottom
+		set -g status-style "bg=#080808"
+		set -g status-justify "absolute-centre"
+
+# pane border look and feel
+# setw -g pane-border-status top
+# setw -g pane-border-format ""
+# setw -g pane-active-border-style "bg=#080808,fg=#1a1a1a"
+# setw -g pane-border-style "bg=#080808,fg=#121212"
+# setw -g pane-border-lines single
+
+# window look and feel
+		set -wg automatic-rename on
+		set -g automatic-rename-format "#{pane_current_command}"
+
+		set -g window-status-format " #I#{?#{!=:#{window_name},Window},: #W,} "
+		set -g window-status-style "bg=#080808,fg=#1a1a1a"
+		set -g window-status-last-style "bg=#080808,fg=#3d3d3d"
+
+		set -g window-status-activity-style "bg=#4a4a4a,fg=#080808"
+		set -g window-status-bell-style "bg=#4a4a4a,fg=#080808,bold"
+		set -gF window-status-separator "#[bg=#080808,fg=#1a1a1a]│"
+
+		set -g window-status-current-format " #I#{?#{!=:#{window_name},Window},: #W,} "
+		set -g window-status-current-style "bg=#707070,fg=#080808,bold"
+
+		run '~/.config/tmux/.tmux/plugins/tpm/tpm' # always keep this line last
+                '';
       };
     };
-}
+		       }
