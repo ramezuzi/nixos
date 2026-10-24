@@ -1,4 +1,3 @@
-```nix
 { inputs, ... }:
 {
   flake.nixosModules.agents = { ... }: {
