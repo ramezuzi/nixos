@@ -4,13 +4,11 @@
   lib,
   config,
   ...
-}:
-
-{
+}: {
   # ----------------------------------------------------------------------
   # System-level packages (available to all users)
   # ----------------------------------------------------------------------
-  flake.nixosModules.tools = { pkgs, ... }: {
+  flake.nixosModules.tools = {pkgs, ...}: {
     environment.systemPackages = with pkgs; [
       # ---- GNU Core Utilities ----
       coreutils # ls, cp, mv, rm, cat, etc.
@@ -82,7 +80,6 @@
       # ---- Cloud CLIs ----
       awscli2
       aws-vault
-      azure-cli
       google-cloud-sdk
       ssm-session-manager-plugin
 
@@ -100,26 +97,26 @@
       age # encryption
       sops # secrets management
 
-      # ---- New Tools ---- 
+      # ---- New Tools ----
 
-      zenith         # TUI system monitor with disk/network graphs
-      bandwhich      # Network usage per process
-      iotop          # IO monitoring
-      iftop          # Network monitoring
-      strace         # System call tracing
-      lsof           # List open files
-      sysstat        # sar, iostat, mpstat
-      lm_sensors     # Temperature sensors
-      ethtool        # Network interface diagnostics
-      pciutils       # lspci
-      usbutils       # lsusb
+      zenith # TUI system monitor with disk/network graphs
+      bandwhich # Network usage per process
+      iotop # IO monitoring
+      iftop # Network monitoring
+      strace # System call tracing
+      lsof # List open files
+      sysstat # sar, iostat, mpstat
+      lm_sensors # Temperature sensors
+      ethtool # Network interface diagnostics
+      pciutils # lspci
+      usbutils # lsusb
     ];
   };
 
   # ----------------------------------------------------------------------
   # User-level packages (for your user only)
   # ----------------------------------------------------------------------
-  flake.homeModules.tools = { pkgs, ... }: {
+  flake.homeModules.tools = {pkgs, ...}: {
     home.packages = with pkgs; [
       # Same list as above – these will be installed for your user
       # You can add user-specific tools here
@@ -145,7 +142,6 @@
       chafa
       asciinema
       just
-
     ];
   };
 }

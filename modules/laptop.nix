@@ -1,6 +1,14 @@
 # modules/laptop.nix
-{ inputs, self, ... }: {
-  flake.nixosModules.laptop = { pkgs, lib, ... }: {
+{
+  inputs,
+  self,
+  ...
+}: {
+  flake.nixosModules.laptop = {
+    pkgs,
+    lib,
+    ...
+  }: {
     # Thermald (Intel only — remove if AMD)
     services.thermald.enable = true;
 
@@ -21,9 +29,6 @@
       HandleLidSwitchDocked = "ignore";
       HandlePowerKey = "suspend";
     };
-
-    # systemd in initrd (better suspend/resume)
-    boot.initrd.systemd.enable = true;
 
     # Wayland session vars
     environment.sessionVariables = {

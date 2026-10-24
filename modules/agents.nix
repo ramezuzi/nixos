@@ -220,7 +220,6 @@
       agents.fx
       agents.gno
       agents.handy
-      agents.hol-guard
       agents.icm
       agents.maki
       agents.mardi-gras

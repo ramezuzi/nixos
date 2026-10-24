@@ -5,15 +5,12 @@
   config,
   osConfig,
   ...
-}:
-
-let
+}: let
   # Determine the flake path for nixd integration
   flakePath = "~/nixos"; # Change this if your flake is elsewhere
   hostName = config.networking.hostName or "zbook";
-in
-{
-  flake.homeModules.helix = { pkgs, ... }: {
+in {
+  flake.homeModules.helix = {pkgs, ...}: {
     programs.helix = {
       enable = true;
       defaultEditor = true;
@@ -81,7 +78,7 @@ in
           true-color = true;
           undercurl = true;
           scrolloff = 8;
-          rulers = [ 100 ];
+          rulers = [100];
           bufferline = "multiple";
           color-modes = true;
           indent-guides = {
@@ -109,17 +106,17 @@ in
         language-server = {
           helm_ls = {
             command = "helm_ls";
-            args = [ "serve" ];
+            args = ["serve"];
           };
 
           vscode-json-language-server = {
             command = "vscode-json-language-server";
-            args = [ "--stdio" ];
+            args = ["--stdio"];
           };
           # Nixd configuration for NixOS
           nixd = {
             command = "nixd";
-            args = [ "--semantic-tokens=true" ];
+            args = ["--semantic-tokens=true"];
             config = {
               nixd = {
                 nixpkgs = {
@@ -131,7 +128,7 @@ in
                   };
                 };
                 formatting = {
-                  command = [ "${lib.getExe pkgs.nixfmt}" ];
+                  command = ["${lib.getExe pkgs.nixfmt}"];
                 };
               };
             };
@@ -168,7 +165,7 @@ in
           # Terraform LS
           terraform-ls = {
             command = "terraform-ls";
-            args = [ "serve" ];
+            args = ["serve"];
             config = {
               terraform = {
                 logsPath = "/tmp/terraform-ls.log";
@@ -179,7 +176,7 @@ in
           # Typescript via vtsls (better than tsserver)
           vtsls = {
             command = "vtsls";
-            args = [ "--stdio" ];
+            args = ["--stdio"];
             config = {
               vtsls = {
                 tsserver = {
@@ -187,7 +184,7 @@ in
                     {
                       name = "@vue/typescript-plugin";
                       location = "${pkgs.vue-language-server}/lib/language-tools/packages/language-server";
-                      languages = [ "vue" ];
+                      languages = ["vue"];
                       configNamespace = "typescript";
                     }
                   ];
@@ -199,13 +196,12 @@ in
           # YAML
           yaml-language-server = {
             command = "yaml-language-server";
-            args = [ "--stdio" ];
+            args = ["--stdio"];
             config = {
               yaml = {
                 schemas = {
                   "https://json.schemastore.org/github-workflow.json" = ".github/workflows/*.yml";
-                  "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json" =
-                    "docker-compose*.yml";
+                  "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json" = "docker-compose*.yml";
                   "https://raw.githubusercontent.com/helm/helm/main/pkg/chartutil/values.schema.json" = "values.yaml";
                   "https://json.schemastore.org/kustomization.json" = "kustomization.yaml";
                   "https://json.schemastore.org/kubernetes.json" = "*.k8s.yaml";
@@ -223,18 +219,18 @@ in
           # Nix
           {
             name = "nix";
-            language-servers = [ "nixd" ];
+            language-servers = ["nixd"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.nixfmt}";
-              args = [ "-" ];
+              args = ["-"];
             };
           }
 
           # Rust
           {
             name = "rust";
-            language-servers = [ "rust-analyzer" ];
+            language-servers = ["rust-analyzer"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.rustfmt}";
@@ -244,7 +240,7 @@ in
           # Go
           {
             name = "go";
-            language-servers = [ "gopls" ];
+            language-servers = ["gopls"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.gofumpt}";
@@ -254,7 +250,7 @@ in
           # Python
           {
             name = "python";
-            language-servers = [ "ruff" ];
+            language-servers = ["ruff"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.black}";
@@ -264,7 +260,7 @@ in
           # TypeScript / JavaScript
           {
             name = "typescript";
-            language-servers = [ "vtsls" ];
+            language-servers = ["vtsls"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.prettierd}";
@@ -276,7 +272,7 @@ in
           }
           {
             name = "javascript";
-            language-servers = [ "vtsls" ];
+            language-servers = ["vtsls"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.prettierd}";
@@ -290,7 +286,7 @@ in
           # Terraform
           {
             name = "hcl";
-            language-servers = [ "terraform-ls" ];
+            language-servers = ["terraform-ls"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.terraform}";
@@ -304,7 +300,7 @@ in
           # YAML
           {
             name = "yaml";
-            language-servers = [ "yaml-language-server" ];
+            language-servers = ["yaml-language-server"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.prettierd}";
@@ -318,7 +314,7 @@ in
           # JSON
           {
             name = "json";
-            language-servers = [ "vscode-json-language-server" ];
+            language-servers = ["vscode-json-language-server"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.prettierd}";
@@ -332,14 +328,14 @@ in
           # Dockerfile
           {
             name = "dockerfile";
-            language-servers = [ "docker-langserver" ];
+            language-servers = ["docker-langserver"];
             auto-format = false;
           }
 
           # Bash
           {
             name = "bash";
-            language-servers = [ "bash-language-server" ];
+            language-servers = ["bash-language-server"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.shfmt}";
@@ -355,14 +351,14 @@ in
           # Markdown
           {
             name = "markdown";
-            language-servers = [ "marksman" ];
+            language-servers = ["marksman"];
             auto-format = false;
           }
 
           # TOML
           {
             name = "toml";
-            language-servers = [ "taplo" ];
+            language-servers = ["taplo"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.taplo}";
@@ -382,7 +378,7 @@ in
           # Helm
           {
             name = "helm";
-            language-servers = [ "helm_ls" ];
+            language-servers = ["helm_ls"];
             auto-format = true;
           }
 
@@ -401,7 +397,6 @@ in
       # Cloud CLIs
       awscli2
       aws-vault
-      azure-cli
       google-cloud-sdk
       ssm-session-manager-plugin
 

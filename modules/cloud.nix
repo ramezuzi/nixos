@@ -1,11 +1,10 @@
 # modules/cloud-tools.nix
 {
-  flake.homeModules.cloudTools = { pkgs, ... }: {
+  flake.homeModules.cloudTools = {pkgs, ...}: {
     home.packages = with pkgs; [
       # cloud CLIs
       awscli2
       aws-vault
-      azure-cli
       google-cloud-sdk
 
       # kubernetes / gitops
