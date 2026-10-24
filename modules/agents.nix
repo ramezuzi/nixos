@@ -179,7 +179,7 @@
         agents.mindwalk
         agents.openresearch
         agents.qmd
-        agents.sem​​ble
+        agents.semble
 
         # Usage, status, and session visibility
         agents.ccstatusline
