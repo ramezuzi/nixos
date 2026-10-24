@@ -49,7 +49,7 @@
     };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";  # prevents duplicate nixpkgs
+      inputs.nixpkgs.follows = "nixpkgs"; # prevents duplicate nixpkgs
     };
     nixos-cli = {
       url = "github:nix-community/nixos-cli";
@@ -58,7 +58,8 @@
     llm-agents.url = "github:numtide/llm-agents.nix";
     coding-agents.url = "github:kissgyorgy/coding-agents";
     hermes-agent.url = "github:NousResearch/hermes-agent/v2026.7.20";
+    artcraft.url = "github:ipeglin/artcraft-nix";
   };
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
+  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
 }
