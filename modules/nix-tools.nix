@@ -1,6 +1,9 @@
-{ inputs, self, ... }: {
-  flake.nixosModules.nixTools = { pkgs, ... }: {
-  	  imports = [ inputs.nixos-cli.nixosModules.nixos-cli ];
+{
+  inputs,
+  self,
+  ...
+}: {
+  flake.nixosModules.nixTools = {pkgs, ...}: {
     environment.systemPackages = with pkgs; [
       comma
       nix-index
