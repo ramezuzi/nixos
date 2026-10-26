@@ -12,6 +12,22 @@
     # Thermald (Intel only — remove if AMD)
     services.thermald.enable = true;
 
+    # ── Nix parallelism (fixes OOM kill) ─────────────────────
+    nix.settings.max-jobs = 4;
+    nix.settings.cores = 4;
+
+    # ── Binary caches (numtide + nixos) ───────────────────────
+    nix.settings.substituters = [
+      "https://cache.nixos.org"
+      "https://cache.numtide.com"
+      "https://numtide.cachix.org"
+    ];
+    nix.settings.trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+      "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+    ];
+
     # Compressed RAM swap
     zramSwap = {
       enable = true;

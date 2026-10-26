@@ -1,19 +1,9 @@
 {inputs, ...}: {
-  flake.nixosModules.agents = {...}: {
-    nixpkgs.overlays = [
-      inputs.coding-agents.overlays.default
-    ];
-  };
-
   flake.homeModules.agents = {
     pkgs,
     config,
     ...
   }: {
-    imports = [
-      inputs.coding-agents.homeManagerModules.default
-    ];
-
     home.packages = let
       agents =
         inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
@@ -90,7 +80,6 @@
       agents.nanocoder
       agents.omo-ai
       agents.orbi-cli
-      agents.pi
       agents.pi-acp
       agents.qoder-cli
       agents.qoder-cli-cn
@@ -98,6 +87,7 @@
       agents.unreal-agent
       agents.voxterm
       agents.zcode
+      agents.dsh
 
       # Multi-agent orchestration and dashboards
       agents.agent-deck
@@ -107,8 +97,8 @@
       agents.aperant
       agents.bb-app
       agents.executor
-      agents.gascity
       agents.gastown
+      agents.gascity
       agents.hermes-one
       agents.kandev
       agents.kandev-desktop
@@ -124,6 +114,7 @@
       agents.swamp
       agents.t3code
       agents.t3code-desktop
+      agents.t3code-resource-monitor
       agents.treehouse
       agents.workmux
 
@@ -136,7 +127,6 @@
       agents.git-surgeon
       agents.codegraph
       agents.code-review-graph
-      agents.entire
       agents.gnhf
       agents.hunk
       agents.tuicr
@@ -213,7 +203,6 @@
       agents.collie
       agents.cubic
       agents.docker-sbx
-      agents.dsh
       agents.fence
       agents.freebuff
       agents.funes
@@ -247,7 +236,5 @@
     home.sessionPath = [
       "${config.home.homeDirectory}/.local/share/pnpm/bin"
     ];
-
-    coding-agents.hermes-agent.enable = true;
   };
 }
