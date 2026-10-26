@@ -114,7 +114,6 @@
       agents.swamp
       agents.t3code
       agents.t3code-desktop
-      agents.t3code-resource-monitor
       agents.treehouse
       agents.workmux
 
