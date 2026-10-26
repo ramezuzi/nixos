@@ -11,7 +11,6 @@
       # Existing tools
       agents.herdr
       agents.opencode
-      pkgs.aider-chat
       agents.gemini-cli
       agents.qwen-code
       pkgs.pi-coding-agent
