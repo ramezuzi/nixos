@@ -98,7 +98,6 @@
       agents.bb-app
       agents.executor
       agents.gastown
-      agents.gascity
       agents.hermes-one
       agents.kandev
       agents.kandev-desktop
