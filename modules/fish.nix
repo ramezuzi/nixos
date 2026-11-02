@@ -56,7 +56,6 @@
         # Quick config edits
         vf = "hx ~/nixos/flake.nix";
         vh = "hx ~/nixos/hosts/zbook/default.nix";
-        vm = "hx ~/nixos/modules/mango.nix";
         vk = "hx ~/nixos/modules/kitty.nix";
         ve = "hx ~/nixos/modules/helix.nix";
         vfish = "hx ~/nixos/modules/fish.nix";
