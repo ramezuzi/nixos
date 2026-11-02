@@ -11,7 +11,24 @@
         vim = {
           viAlias = true;
           vimAlias = true;
-          opts.expandtab = true;
+          opts = {
+            expandtab = true;
+            number = true;
+            relativenumber = true;
+            signcolumn = "yes";
+            scrolloff = 6;
+            sidescrolloff = 8;
+            updatetime = 250;
+            timeoutlen = 400;
+            undofile = true;
+            ignorecase = true;
+            smartcase = true;
+            splitbelow = true;
+            splitright = true;
+            tabstop = 4;
+            shiftwidth = 4;
+            softtabstop = 4;
+          };
           spellcheck.enable = true;
 
           # LSP
@@ -93,6 +110,82 @@
               action = "<cmd>Telescope help_tags<cr>";
               desc = "Help tags";
             };
+            "gd" = {
+              action = "<cmd>lua vim.lsp.buf.definition()<cr>";
+              desc = "Go to definition";
+            };
+            "gD" = {
+              action = "<cmd>lua vim.lsp.buf.declaration()<cr>";
+              desc = "Go to declaration";
+            };
+            "gr" = {
+              action = "<cmd>lua vim.lsp.buf.references()<cr>";
+              desc = "Find references";
+            };
+            "gi" = {
+              action = "<cmd>lua vim.lsp.buf.implementation()<cr>";
+              desc = "Go to implementation";
+            };
+            "K" = {
+              action = "<cmd>lua vim.lsp.buf.hover()<cr>";
+              desc = "Show symbol documentation";
+            };
+            "<leader>ca" = {
+              action = "<cmd>lua vim.lsp.buf.code_action()<cr>";
+              desc = "Code action";
+            };
+            "<leader>rn" = {
+              action = "<cmd>lua vim.lsp.buf.rename()<cr>";
+              desc = "Rename symbol";
+            };
+            "<leader>e" = {
+              action = "<cmd>lua vim.diagnostic.open_float()<cr>";
+              desc = "Show line diagnostics";
+            };
+            "[d" = {
+              action = "<cmd>lua vim.diagnostic.goto_prev()<cr>";
+              desc = "Previous diagnostic";
+            };
+            "]d" = {
+              action = "<cmd>lua vim.diagnostic.goto_next()<cr>";
+              desc = "Next diagnostic";
+            };
+            "<F5>" = {
+              action = "<cmd>lua require('dap').continue()<cr>";
+              desc = "Debug: continue";
+            };
+            "<F9>" = {
+              action = "<cmd>lua require('dap').toggle_breakpoint()<cr>";
+              desc = "Debug: toggle breakpoint";
+            };
+            "<F10>" = {
+              action = "<cmd>lua require('dap').step_over()<cr>";
+              desc = "Debug: step over";
+            };
+            "<F11>" = {
+              action = "<cmd>lua require('dap').step_into()<cr>";
+              desc = "Debug: step into";
+            };
+            "<F12>" = {
+              action = "<cmd>lua require('dap').step_out()<cr>";
+              desc = "Debug: step out";
+            };
+            "<leader>du" = {
+              action = "<cmd>lua require('dapui').toggle()<cr>";
+              desc = "Debug: toggle UI";
+            };
+            "<leader>dq" = {
+              action = "<cmd>lua require('dap').terminate()<cr>";
+              desc = "Debug: stop session";
+            };
+            "<leader>xx" = {
+              action = "<cmd>Trouble diagnostics toggle<cr>";
+              desc = "Diagnostics: workspace";
+            };
+            "<leader>xX" = {
+              action = "<cmd>Trouble diagnostics toggle filter.buf=0<cr>";
+              desc = "Diagnostics: current buffer";
+            };
           };
 
           # Languages
@@ -102,6 +195,7 @@
             enableExtraDiagnostics = true;
 
             nix.enable = true;
+            lua.enable = true;
             bash.enable = true;
             markdown.enable = true;
             toml.enable = true;
@@ -132,7 +226,8 @@
 
             python = {
               enable = true;
-              lsp.servers = ["ruff"];
+              # basedpyright provides type checking; Ruff provides fast linting.
+              lsp.servers = ["basedpyright" "ruff"];
               format.type = ["black"];
               dap.enable = true;
             };
