@@ -23,6 +23,23 @@
         lcdfilter = "default";
       };
 
+      # Use the real bold face for normal-weight requests while preserving
+      # heavier weights explicitly requested by applications.
+      localConf = ''
+        <?xml version="1.0"?>
+        <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+        <fontconfig>
+          <match target="pattern">
+            <test name="weight" compare="less_eq">
+              <const>medium</const>
+            </test>
+            <edit name="weight" mode="assign" binding="strong">
+              <const>bold</const>
+            </edit>
+          </match>
+        </fontconfig>
+      '';
+
     };
   };
 }
