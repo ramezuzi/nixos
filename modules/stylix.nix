@@ -8,19 +8,18 @@
     { pkgs, lib, ... }:
     let
       # ═══════════════════════════════════════════════════════════
-      # 🎨 CHANGE YOUR THEME HERE (ONLY 1 LINE)
+      # 🎨 CHANGE YOUR THEME AND FONT HERE
       # ═══════════════════════════════════════════════════════════
       theme = "berlin";
-      # ═══════════════════════════════════════════════════════════
 
-      # Font placeholder
       myFont = "JetBrainsMono Nerd Font";
       myFontPkg = pkgs.nerd-fonts.jetbrains-mono;
+      # ═══════════════════════════════════════════════════════════
 
-      # Logic: Use custom YAML for Berlin, otherwise use built-in schemes
+      # Dynamic path: uses your custom file for Berlin, otherwise built-in themes
       schemePath =
         if theme == "berlin" then
-          ./dotfiles/themes/berlin.yaml
+          ../dotfiles/themes/berlin.yaml
         else
           "${pkgs.base16-schemes}/share/themes/${theme}.yaml";
     in
@@ -36,23 +35,26 @@
           qt.enable = true;
         };
 
-        # Use the dynamic path here
+        # Apply the chosen color scheme
         base16Scheme = schemePath;
         polarity = "dark";
 
-        iconTheme = {
+        # ── Icons (Updated to stylix.icons) ─────────────────────
+        icons = {
           enable = true;
           package = pkgs.papirus-icon-theme;
           dark = "Papirus-Dark";
           light = "Papirus";
         };
 
+        # ── Cursors ─────────────────────────────────────────────
         cursor = {
           package = pkgs.bibata-cursors;
           name = "Bibata-Modern-Ice";
           size = 20;
         };
 
+        # ── Fonts (Using the one-line variables) ────────────────
         fonts = {
           serif = {
             package = myFontPkg;
@@ -78,6 +80,7 @@
           };
         };
 
+        # ── Opacity ─────────────────────────────────────────────
         opacity = {
           terminal = 0.98;
           applications = 0.98;
