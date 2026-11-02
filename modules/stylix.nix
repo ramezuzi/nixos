@@ -2,23 +2,22 @@
   inputs,
   self,
   ...
-}:
-let
-  # ── Just the theme name ──────────────────────────────────────
-  # Any name from: nix build nixpkgs#base16-schemes --no-link --print-out-paths
-  #                ls "$(that-path)/share/themes/"
-  #
-  # Examples:
-  #   "catppuccin-mocha", "gruvbox-dark-hard", "tokyonight",
-  #   "nord", "dracula", "kanagawa", "oxocarbon-dark", "zenburn",
-  #   "rose-pine", "everforest", "solarized-dark", "github-dark"
-  #
-  theme = "black-metal-mayhem";
-  # ────────────────────────────────────────────────────────────
-in
-{
-  flake.nixosModules.stylix = { pkgs, lib, ... }: {
-    imports = [ inputs.stylix.nixosModules.stylix ];
+}: {
+  flake.nixosModules.stylix = {
+    pkgs,
+    lib,
+    ...
+  }: let
+    # ═══════════════════════════════════════════════════════════
+    # 🎨 CHANGE YOUR THEME AND FONT HERE (ONLY 3 LINES)
+    # ═══════════════════════════════════════════════════════════
+    theme = "berlin";
+
+    myFont = "JetBrainsMono Nerd Font";
+    myFontPkg = pkgs.nerd-fonts.jetbrains-mono;
+    # ═══════════════════════════════════════════════════════════
+  in {
+    imports = [inputs.stylix.nixosModules.stylix];
 
     stylix = {
       enable = true;
@@ -29,9 +28,17 @@ in
         qt.enable = true;
       };
 
+      # Uses the theme variable from above
       base16Scheme = "${pkgs.base16-schemes}/share/themes/${theme}.yaml";
-
       polarity = "dark";
+
+      # ── Icon Theme (Added back) ─────────────────────────────
+      iconTheme = {
+        enable = true;
+        package = pkgs.papirus-icon-theme;
+        dark = "Papirus-Dark";
+        light = "Papirus";
+      };
 
       cursor = {
         package = pkgs.bibata-cursors;
@@ -39,18 +46,19 @@ in
         size = 20;
       };
 
+      # ── Fonts (Uses the font variables from above) ──────────
       fonts = {
         serif = {
-          package = pkgs.nerd-fonts.jetbrains-mono;
-          name = "JetBrainsMono Nerd Font";
+          package = myFontPkg;
+          name = myFont;
         };
         sansSerif = {
-          package = pkgs.nerd-fonts.jetbrains-mono;
-          name = "JetBrainsMono Nerd Font";
+          package = myFontPkg;
+          name = myFont;
         };
         monospace = {
-          package = pkgs.nerd-fonts.jetbrains-mono;
-          name = "JetBrainsMono Nerd Font";
+          package = myFontPkg;
+          name = myFont;
         };
         emoji = {
           package = pkgs.noto-fonts-color-emoji;

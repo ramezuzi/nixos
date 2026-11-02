@@ -1,6 +1,7 @@
 {...}: {
   flake.nixosModules.fonts = {pkgs, ...}: {
-    # Install the essential missing font packages
+    # ── Install essential fallback fonts ───────────────────────
+    # (JetBrains Mono is handled automatically by Stylix)
     fonts.packages = with pkgs; [
       noto-fonts
       noto-fonts-cjk-sans
@@ -8,23 +9,34 @@
       font-awesome
     ];
 
-    # Fix the font rendering settings
+    # ── Fontconfig Settings ────────────────────────────────────
     fonts.fontconfig = {
       enable = true;
       antialias = true;
 
       hinting = {
         enable = true;
-        style = "slight"; # FIXED: Changed from "hintslight"
+        style = "slight";
       };
 
       subpixel = {
-        enable = true;
         rgba = "rgb";
-        lcdfilter = "default"; # FIXED: NixOS expects "default" instead of "lcddefault"
+        lcdfilter = "default";
       };
 
-      dpi = 96;
+      # ── MAKE EVERYTHING BOLD GLOBALLY ────────────────────────
+      # If you ever want to revert this, just delete the localConf block.
+      localConf = ''
+        <?xml version="1.0"?>
+        <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+        <fontconfig>
+          <match target="font">
+            <edit name="weight" mode="assign" binding="strong">
+              <const>bold</const>
+            </edit>
+          </match>
+        </fontconfig>
+      '';
     };
   };
 }
