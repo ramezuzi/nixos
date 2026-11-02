@@ -4,7 +4,6 @@
   flake.homeModules.db-gui = { pkgs, ... }: {
     home.packages = with pkgs; [
       dbeaver-bin # one app for MySQL, Postgres, SQLite, etc.
-      beekeeper-studio
       mysql-workbench # official MySQL GUI
       pgadmin4-desktopmode # official PostgreSQL GUI, as a desktop app
       lazysql # TUI option
