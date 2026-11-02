@@ -63,6 +63,12 @@
     programs.dconf.enable = true;
     fonts.fontconfig.enable = true;
 
+    fonts.packages = with pkgs; [
+      noto-fonts # Broad unicode coverage
+      noto-fonts-cjk-sans # Chinese, Japanese, Korean
+      liberation_ttf # Arial/Times New Roman replacements for apps/web
+      font-awesome # Extra icons for various apps
+    ];
     # Wayland utilities
     environment.systemPackages = with pkgs; [
       brightnessctl
