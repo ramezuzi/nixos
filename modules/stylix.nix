@@ -14,6 +14,10 @@
 
       myFont = "JetBrainsMono Nerd Font";
       myFontPkg = pkgs.nerd-fonts.jetbrains-mono;
+      sansFont = "Noto Sans";
+      serifFont = "Noto Serif";
+      sansFontPkg = pkgs.noto-fonts;
+      serifFontPkg = pkgs.noto-fonts;
       # ═══════════════════════════════════════════════════════════
 
       # Dynamic path: uses your custom file for Berlin, otherwise built-in themes
@@ -57,12 +61,12 @@
         # ── Fonts (Using the one-line variables) ────────────────
         fonts = {
           serif = {
-            package = myFontPkg;
-            name = myFont;
+            package = serifFontPkg;
+            name = serifFont;
           };
           sansSerif = {
-            package = myFontPkg;
-            name = myFont;
+            package = sansFontPkg;
+            name = sansFont;
           };
           monospace = {
             package = myFontPkg;
@@ -80,12 +84,12 @@
           };
         };
 
-        # ── Opacity ─────────────────────────────────────────────
+        # Keep windows fully opaque for consistent text contrast.
         opacity = {
-          terminal = 0.98;
-          applications = 0.98;
-          desktop = 0.98;
-          popups = 0.98;
+          terminal = 1.0;
+          applications = 1.0;
+          desktop = 1.0;
+          popups = 1.0;
         };
       };
     };
