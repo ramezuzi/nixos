@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  flake.homeModules.nvf = {pkgs, ...}: {
+  flake.homeModules.nvf = {pkgs, lib, ...}: {
     imports = [inputs.nvf.homeManagerModules.default];
     programs.nvf = {
       enable = true;
@@ -38,6 +38,58 @@
             lightbulb.enable = true;
             trouble.enable = true;
             lspSignature.enable = false; # conflicts with blink-cmp
+            # helix: editor.lsp.display-inlay-hints = true
+            inlayHints.enable = true;
+
+            # ── Per-server tweaks ported from helix.nix ──────────────
+            servers = {
+              # Flake-aware nixd (helix: nixd config block)
+              nixd.settings.nixd = {
+                nixpkgs.expr = "import (builtins.getFlake \"/home/ramez/nixos\").inputs.nixpkgs { }";
+                options.nixos.expr =
+                  "(builtins.getFlake \"/home/ramez/nixos\").nixosConfigurations.zbook.options";
+                formatting.command = ["${lib.getExe pkgs.nixfmt}"];
+              };
+
+              # helix: gopls config
+              gopls.settings.gopls = {
+                usePlaceholders = true;
+                completeUnimported = true;
+                staticcheck = true;
+                analyses = {
+                  unusedparams = true;
+                  shadow = true;
+                };
+              };
+
+              # helix: checkOnSave with clippy + proc macros
+              # (modern rust-analyzer keys: check.* instead of checkOnSave)
+              "rust-analyzer".settings.rust-analyzer = {
+                check = {
+                  allTargets = true;
+                  command = "clippy";
+                };
+                procMacro.enable = true;
+              };
+
+              # helix: yaml-language-server schemas
+              yaml-language-server.settings.yaml = {
+                format.enable = true;
+                schemas = {
+                  "https://json.schemastore.org/github-workflow.json" = ".github/workflows/*.yml";
+                  "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json" = [
+                    "docker-compose*.yml"
+                  ];
+                  "https://raw.githubusercontent.com/helm/helm/main/pkg/chartutil/values.schema.json" = [
+                    "values.yaml"
+                  ];
+                  "https://json.schemastore.org/kustomization.json" = "kustomization.yaml";
+                  "https://json.schemastore.org/kubernetes.json" = [
+                    "*.k8s.yaml"
+                  ];
+                };
+              };
+            };
           };
 
           # Debugging
@@ -194,14 +246,46 @@
             enableTreesitter = true;
             enableExtraDiagnostics = true;
 
-            nix.enable = true;
+            # helix uses nixd + nixfmt (flake-aware server config above)
+            nix = {
+              enable = true;
+              lsp.servers = ["nixd"];
+              format.type = ["nixfmt"];
+            };
+
             lua.enable = true;
             bash.enable = true;
-            markdown.enable = true;
+
+            # helix: auto-format = false for markdown
+            markdown = {
+              enable = true;
+              format.enable = false;
+            };
+
             toml.enable = true;
             json.enable = true;
-            docker.enable = true;
-            hcl.enable = true; # terraform/opentofu
+
+            # helix: auto-format = false for dockerfile
+            docker = {
+              enable = true;
+              format.enable = false;
+            };
+
+            # helix maps .tf/.hcl to terraform-ls + terraform fmt
+            hcl = {
+              enable = true;
+              lsp.servers = ["terraform-ls"];
+              format.type = ["terraform"];
+            };
+            terraform = {
+              enable = true;
+              lsp.servers = ["terraform-ls"];
+              format.type = ["terraform"];
+            };
+
+            # helix has Helm and Justfile language entries
+            helm.enable = true;
+            just.enable = true;
 
             yaml = {
               enable = true;
@@ -232,12 +316,18 @@
               dap.enable = true;
             };
 
+            # helix uses vtsls (with the Vue TS plugin) — the nvf module's own
+            # enum only knows tsserver/deno/etc., so clear it and enable the
+            # vtsls preset below instead.
             typescript = {
               enable = true;
-              lsp.enable = true;
+              lsp.servers = [];
               format.enable = true;
             };
           };
+
+          # ...and enable vtsls (ports helix's vtsls config incl. Vue plugin)
+          lsp.presets.vtsls.enable = true;
 
           # ----- Manual plugins added via extraPlugins & luaConfigRC -----
 

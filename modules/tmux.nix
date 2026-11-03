@@ -1,12 +1,21 @@
-{ inputs, ... }:
+{ ... }:
 {
-  flake.homeModules.tmux = { pkgs, config, ... }: {
-    home.packages = [ pkgs.tmux ];
-
-    home.file.".config/tmux/tmux.conf".source =
-      config.lib.file.mkOutOfStoreSymlink
-        "${config.home.homeDirectory}/nixos/dotfiles/tmux/tmux.conf";
-
-    home.sessionVariables.TERM = "tmux-256color";
+  flake.homeModules.tmux = { pkgs, config, ... }:
+  let
+    tmuxConfig = pkgs.writeText "tmux.conf" (
+      builtins.replaceStrings
+        [ "@base00@" ]
+        [ config.lib.stylix.colors.withHashtag.base00 ]
+        (builtins.readFile ../dotfiles/tmux/tmux.conf)
+    );
+  in {
+    programs.tmux = {
+      enable = true;
+      package = pkgs.tmux;
+      extraConfig = ''
+        source-file ${tmuxConfig}
+        run-shell ${pkgs.tmuxPlugins.online-status.rtp}
+      '';
+    };
   };
 }
