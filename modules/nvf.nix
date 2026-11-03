@@ -25,11 +25,44 @@
             smartcase = true;
             splitbelow = true;
             splitright = true;
+            cursorline = true;
+            termguicolors = true;
+            completeopt = "menu,menuone,noselect";
+            inccommand = "split";
             tabstop = 4;
             shiftwidth = 4;
             softtabstop = 4;
           };
           spellcheck.enable = true;
+
+          diagnostics = {
+            enable = true;
+            config = {
+              virtual_text = true;
+              underline = true;
+              update_in_insert = false;
+              severity_sort = true;
+              float = {
+                border = "rounded";
+                source = "if_many";
+              };
+            };
+            nvim-lint = {
+              enable = true;
+              linters_by_ft = {
+                nix = [ "deadnix" "statix" ];
+                sh = [ "shellcheck" ];
+                bash = [ "shellcheck" ];
+                markdown = [ "markdownlint-cli2" ];
+              };
+            };
+            presets = {
+              deadnix.enable = true;
+              statix.enable = true;
+              shellcheck.enable = true;
+              markdownlint-cli2.enable = true;
+            };
+          };
 
           # LSP
           lsp = {
@@ -96,6 +129,91 @@
           debugger.nvim-dap = {
             enable = true;
             ui.enable = true;
+            presets = {
+              codelldb.enable = true;
+              debugpy.enable = true;
+            };
+            adapters.go = {
+              type = "server";
+              host = "127.0.0.1";
+              port = "\${port}";
+              executable = {
+                command = lib.getExe pkgs.delve;
+                args = [ "dap" "-l" "127.0.0.1:\${port}" ];
+              };
+            };
+            configurations = {
+              python = [
+                {
+                  name = "Launch current file";
+                  type = "debugpy";
+                  request = "launch";
+                  program = "\${file}";
+                  pythonPath = "python";
+                  justMyCode = true;
+                }
+              ];
+              rust = [
+                {
+                  name = "Launch current executable";
+                  type = "codelldb";
+                  request = "launch";
+                  program = lib.generators.mkLuaInline ''
+                    function()
+                      return vim.fn.input(
+                        "Path to executable: ",
+                        vim.fn.getcwd() .. "/target/debug/",
+                        "file"
+                      )
+                    end
+                  '';
+                  cwd = "\${workspaceFolder}";
+                  stopOnEntry = false;
+                }
+              ];
+              c = [
+                {
+                  name = "Launch current executable";
+                  type = "codelldb";
+                  request = "launch";
+                  program = lib.generators.mkLuaInline ''
+                    function()
+                      return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+                    end
+                  '';
+                  cwd = "\${workspaceFolder}";
+                  stopOnEntry = false;
+                }
+              ];
+              cpp = [
+                {
+                  name = "Launch current executable";
+                  type = "codelldb";
+                  request = "launch";
+                  program = lib.generators.mkLuaInline ''
+                    function()
+                      return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+                    end
+                  '';
+                  cwd = "\${workspaceFolder}";
+                  stopOnEntry = false;
+                }
+              ];
+              go = [
+                {
+                  name = "Launch current executable";
+                  type = "go";
+                  request = "launch";
+                  mode = "exec";
+                  program = lib.generators.mkLuaInline ''
+                    function()
+                      return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+                    end
+                  '';
+                  cwd = "\${workspaceFolder}";
+                }
+              ];
+            };
           };
 
           # Autocomplete & snippets
@@ -103,6 +221,26 @@
           snippets.luasnip.enable = true;
           autopairs.nvim-autopairs.enable = true;
           treesitter.context.enable = true;
+
+          # Mini.nvim utilities; keep the existing Blink, Oil, autopairs,
+          # comment, Telescope and WhichKey integrations as the primary tools.
+          mini = {
+            ai.enable = true;
+            align.enable = true;
+            bracketed.enable = true;
+            bufremove.enable = true;
+            cursorword.enable = true;
+            fuzzy.enable = true;
+            hipatterns.enable = true;
+            move.enable = true;
+            operators.enable = true;
+            sessions.enable = true;
+            splitjoin.enable = true;
+            trailspace.enable = true;
+            visits.enable = true;
+          };
+
+          statusline.lualine.enable = true;
 
           # Telescope
           telescope.enable = true;
@@ -161,6 +299,38 @@
             "<leader>fh" = {
               action = "<cmd>Telescope help_tags<cr>";
               desc = "Help tags";
+            };
+            "<leader>fd" = {
+              action = "<cmd>Telescope diagnostics<cr>";
+              desc = "Find diagnostics";
+            };
+            "<leader>fs" = {
+              action = "<cmd>Telescope lsp_document_symbols<cr>";
+              desc = "Find document symbols";
+            };
+            "<leader>fS" = {
+              action = "<cmd>Telescope lsp_workspace_symbols<cr>";
+              desc = "Find workspace symbols";
+            };
+            "<leader>cf" = {
+              action = "<cmd>lua require('conform').format({ async = true, lsp_format = 'fallback' })<cr>";
+              desc = "Format buffer";
+            };
+            "<leader>bd" = {
+              action = "<cmd>lua require('mini.bufremove').delete(0, true)<cr>";
+              desc = "Close buffer";
+            };
+            "<leader>ss" = {
+              action = "<cmd>lua require('mini.sessions').select()<cr>";
+              desc = "Open session";
+            };
+            "<leader>sS" = {
+              action = "<cmd>lua require('mini.sessions').write()<cr>";
+              desc = "Save session";
+            };
+            "<leader>tw" = {
+              action = "<cmd>lua require('mini.trailspace').trim()<cr>";
+              desc = "Trim trailing whitespace";
             };
             "gd" = {
               action = "<cmd>lua vim.lsp.buf.definition()<cr>";
@@ -261,6 +431,11 @@
               enable = true;
               format.enable = false;
             };
+
+            clang.enable = true;
+            css.enable = true;
+            html.enable = true;
+            vue.enable = true;
 
             toml.enable = true;
             json.enable = true;
