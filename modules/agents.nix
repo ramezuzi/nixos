@@ -14,6 +14,7 @@
       agents.gemini-cli
       agents.qwen-code
       pkgs.pi-coding-agent
+      pkgs.ollama # Client/runtime only; the Ollama service and model downloads stay opt-in.
       pkgs.nodejs
 
       # Claude ecosystem

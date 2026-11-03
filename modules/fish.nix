@@ -78,6 +78,13 @@
         set -gx KUBECONFIG ~/.kube/config
         set -U fish_greeting ""
 
+        # Keep provider credentials out of Nix and the dotfiles repository.
+        # Create this file locally with mode 600 to export API keys for CLI agents.
+        set -l ai_agents_credentials "$HOME/.config/ai-agents/credentials.fish"
+        if test -r "$ai_agents_credentials"
+            source "$ai_agents_credentials"
+        end
+
         if command -v starship >/dev/null
             starship init fish | source
         end
