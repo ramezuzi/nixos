@@ -77,7 +77,7 @@
                 if test -z "$line"; or string match -q '#*' -- $line
                     continue
                 end
-                set -l line (string replace -r '^export\s+' '''' -- $line)
+                set -l line (string replace -r '^export\s+' ''' -- $line)
                 set -l kv (string split -m 1 = -- $line)
                 if test (count $kv) -eq 2
                     set -gx $kv[1] (string trim -- $kv[2])
@@ -113,7 +113,7 @@
                 if test -z "$line"; or string match -q '#*' -- $line
                     continue
                 end
-                set -l line (string replace -r '^export\s+' '''' -- $line)
+                set -l line (string replace -r '^export\s+' ''' -- $line)
                 set -l kv (string split -m 1 = -- $line)
                 if test (count $kv) -eq 2
                     set -gx $kv[1] (string trim -- $kv[2])
