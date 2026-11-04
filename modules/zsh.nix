@@ -80,6 +80,23 @@
         extended = true;
       };
 
+      # Load API keys for all zsh invocations (including non-interactive agents).
+      envExtra = ''
+        # Keep provider credentials out of Nix and the dotfiles repository.
+        # Prefer credentials.zsh; fall back to sourcing ~/.config/ai-keys/env.
+        ai_agents_credentials="$HOME/.config/ai-agents/credentials.zsh"
+        if [[ -r "$ai_agents_credentials" ]]; then
+          source "$ai_agents_credentials"
+        elif [[ -r "$HOME/.config/ai-keys/env" ]]; then
+          set -a
+          source "$HOME/.config/ai-keys/env"
+          set +a
+          if [[ -n "''${GEMINI_API_KEY-}" && -z "''${GOOGLE_API_KEY-}" ]]; then
+            export GOOGLE_API_KEY="$GEMINI_API_KEY"
+          fi
+        fi
+      '';
+
       initContent = ''
         # PATH
         typeset -U path
@@ -92,11 +109,17 @@
         export TERMINAL=kitty
         export KUBECONFIG=~/.kube/config
 
-        # Keep provider credentials out of Nix and the dotfiles repository.
-        # Create this file locally with mode 600 to export API keys for CLI agents.
+        # Re-load API keys in interactive shells (same sources as envExtra).
         ai_agents_credentials="$HOME/.config/ai-agents/credentials.zsh"
         if [[ -r "$ai_agents_credentials" ]]; then
           source "$ai_agents_credentials"
+        elif [[ -r "$HOME/.config/ai-keys/env" ]]; then
+          set -a
+          source "$HOME/.config/ai-keys/env"
+          set +a
+          if [[ -n "''${GEMINI_API_KEY-}" && -z "''${GOOGLE_API_KEY-}" ]]; then
+            export GOOGLE_API_KEY="$GEMINI_API_KEY"
+          fi
         fi
 
         if command -v starship >/dev/null 2>&1; then
