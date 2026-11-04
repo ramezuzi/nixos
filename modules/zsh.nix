@@ -13,7 +13,6 @@
       # Same abbreviations as fish.nix, expressed as zsh aliases.
       shellAliases = {
         # NixOS
-        nrs = "sudo nixos-rebuild switch --flake ~/nixos#$(hostname)";
         nfu = "nix flake update";
 
         # Git
@@ -99,9 +98,14 @@
       '';
 
       initContent = ''
-        # PATH
+        # PATH (same as fish: prepend existing dirs only)
         typeset -U path
-        path+=("$HOME/.local/bin" "$HOME/go/bin" "$HOME/.cargo/bin")
+        _extra_paths=()
+        for _p in "$HOME/.local/bin" "$HOME/go/bin" "$HOME/.cargo/bin"; do
+          [[ -d "$_p" ]] && _extra_paths+=("$_p")
+        done
+        (( $#_extra_paths )) && path=("''${_extra_paths[@]}" $path)
+        unset _p _extra_paths
 
         # Environment
         export EDITOR=hx
@@ -109,19 +113,6 @@
         export BROWSER=firefox
         export TERMINAL=kitty
         export KUBECONFIG=~/.kube/config
-
-        # Re-load API keys in interactive shells (same sources as envExtra).
-        ai_agents_credentials="$HOME/.config/ai-agents/credentials.zsh"
-        if [[ -r "$ai_agents_credentials" ]]; then
-          source "$ai_agents_credentials"
-        elif [[ -r "$HOME/.config/ai-keys/env" ]]; then
-          set -a
-          source "$HOME/.config/ai-keys/env"
-          set +a
-          if [[ -n "''${GEMINI_API_KEY-}" && -z "''${GOOGLE_API_KEY-}" ]]; then
-            export GOOGLE_API_KEY="$GEMINI_API_KEY"
-          fi
-        fi
 
         if command -v starship >/dev/null 2>&1; then
           eval "$(starship init zsh)"
@@ -146,6 +137,11 @@
         if command -v direnv >/dev/null 2>&1; then
           eval "$(direnv hook zsh)"
         fi
+
+        # Quick rebuild (same as fish's nrs function)
+        nrs() {
+          sudo nixos-rebuild switch --flake ~/nixos#$(hostname)
+        }
 
         # Switch k8s context with fzf
         kctx() {

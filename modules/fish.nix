@@ -13,7 +13,6 @@
       # Only essential aliases
       shellAbbrs = {
         # NixOS
-        nrs = "sudo nixos-rebuild switch --flake ~/nixos#";
         nfu = "nix flake update";
 
         # Git
@@ -52,6 +51,7 @@
         ls = "eza --git";
         ll = "eza -l --git";
         lt = "eza --tree";
+        l = "ls -alh"; # same as NixOS's fish default (`alias l 'ls -alh'`)
 
         # Quick config edits
         vf = "hx ~/nixos/flake.nix";
@@ -59,14 +59,16 @@
         vk = "hx ~/nixos/modules/kitty.nix";
         ve = "hx ~/nixos/modules/helix.nix";
         vfish = "hx ~/nixos/modules/fish.nix";
+        vzsh = "hx ~/nixos/modules/zsh.nix";
         vs = "hx ~/nixos/modules/stylix.nix";
 
         # nh
         nh = "nh os switch ~/nixos --hostname zbook";
       };
 
-      # Load API keys for login shells too (non-interactive agent launches).
-      loginShellInit = ''
+      # Load API keys for every fish invocation (scripts, agents, interactive),
+      # matching zsh's envExtra.
+      shellInit = ''
         set -l ai_agents_credentials "$HOME/.config/ai-agents/credentials.fish"
         if test -r "$ai_agents_credentials"
             source "$ai_agents_credentials"
@@ -94,6 +96,17 @@
         # PATH
         fish_add_path ~/.local/bin ~/go/bin ~/.cargo/bin
 
+        # Deduplicate PATH (zsh's `typeset -U path` does the same)
+        set -l __seen
+        set -l __newpath
+        for __p in $PATH
+            if not contains -- $__p $__seen
+                set __seen $__seen $__p
+                set __newpath $__newpath $__p
+            end
+        end
+        set -gx PATH $__newpath
+
         # Environment
         set -gx EDITOR hx
         set -gx VISUAL hx
@@ -101,28 +114,6 @@
         set -gx TERMINAL kitty
         set -gx KUBECONFIG ~/.kube/config
         set -U fish_greeting ""
-
-        # Keep provider credentials out of Nix and the dotfiles repository.
-        # Prefer credentials.fish; fall back to ~/.config/ai-keys/env.
-        set -l ai_agents_credentials "$HOME/.config/ai-agents/credentials.fish"
-        if test -r "$ai_agents_credentials"
-            source "$ai_agents_credentials"
-        else if test -r "$HOME/.config/ai-keys/env"
-            for line in (cat $HOME/.config/ai-keys/env)
-                set -l line (string trim -- $line)
-                if test -z "$line"; or string match -q '#*' -- $line
-                    continue
-                end
-                set -l line (string replace -r '^export\s+' ''' -- $line)
-                set -l kv (string split -m 1 = -- $line)
-                if test (count $kv) -eq 2
-                    set -gx $kv[1] (string trim -- $kv[2])
-                end
-            end
-            if set -q GEMINI_API_KEY; and not set -q GOOGLE_API_KEY
-                set -gx GOOGLE_API_KEY $GEMINI_API_KEY
-            end
-        end
 
         if command -v starship >/dev/null
             starship init fish | source
