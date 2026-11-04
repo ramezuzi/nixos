@@ -2,6 +2,7 @@
   flake.homeModules.agents = {
     pkgs,
     config,
+    lib,
     ...
   }: {
     home.packages = let
@@ -14,7 +15,7 @@
       agents.gemini-cli
       agents.qwen-code
       pkgs.pi-coding-agent
-      pkgs.ollama # Client/runtime only; the Ollama service and model downloads stay opt-in.
+      pkgs.ollama
       pkgs.nodejs
 
       # Claude ecosystem
@@ -234,5 +235,25 @@
     home.sessionPath = [
       "${config.home.homeDirectory}/.local/share/pnpm/bin"
     ];
+
+    # Local free inference — start on login; pull models yourself (`ollama pull …`).
+    systemd.user.services.ollama = {
+      Unit = {
+        Description = "Ollama local LLM server";
+        After = ["network.target"];
+      };
+      Service = {
+        ExecStart = "${pkgs.ollama}/bin/ollama serve";
+        Restart = "on-failure";
+        Environment = ["OLLAMA_HOST=127.0.0.1:11434"];
+      };
+      Install.WantedBy = ["default.target"];
+    };
+
+    # Keep fish + systemd environment.d wired to ~/.config/ai-keys/env without
+    # putting secrets into the Nix store. credentials.fish is what fish.nix sources.
+    home.activation.syncAiKeys = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      ${pkgs.python3}/bin/python3 ${./sync-ai-keys.py}
+    '';
   };
 }

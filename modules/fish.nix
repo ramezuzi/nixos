@@ -65,6 +65,30 @@
         nh = "nh os switch ~/nixos --hostname zbook";
       };
 
+      # Load API keys for login shells too (non-interactive agent launches).
+      loginShellInit = ''
+        set -l ai_agents_credentials "$HOME/.config/ai-agents/credentials.fish"
+        if test -r "$ai_agents_credentials"
+            source "$ai_agents_credentials"
+        else if test -r "$HOME/.config/ai-keys/env"
+            # Fallback: parse KEY=value from ai-keys/env into fish globals.
+            for line in (cat $HOME/.config/ai-keys/env)
+                set -l line (string trim -- $line)
+                if test -z "$line"; or string match -q '#*' -- $line
+                    continue
+                end
+                set -l line (string replace -r '^export\s+' '''' -- $line)
+                set -l kv (string split -m 1 = -- $line)
+                if test (count $kv) -eq 2
+                    set -gx $kv[1] (string trim -- $kv[2])
+                end
+            end
+            if set -q GEMINI_API_KEY; and not set -q GOOGLE_API_KEY
+                set -gx GOOGLE_API_KEY $GEMINI_API_KEY
+            end
+        end
+      '';
+
       interactiveShellInit = ''
 
         # PATH
@@ -79,10 +103,25 @@
         set -U fish_greeting ""
 
         # Keep provider credentials out of Nix and the dotfiles repository.
-        # Create this file locally with mode 600 to export API keys for CLI agents.
+        # Prefer credentials.fish; fall back to ~/.config/ai-keys/env.
         set -l ai_agents_credentials "$HOME/.config/ai-agents/credentials.fish"
         if test -r "$ai_agents_credentials"
             source "$ai_agents_credentials"
+        else if test -r "$HOME/.config/ai-keys/env"
+            for line in (cat $HOME/.config/ai-keys/env)
+                set -l line (string trim -- $line)
+                if test -z "$line"; or string match -q '#*' -- $line
+                    continue
+                end
+                set -l line (string replace -r '^export\s+' '''' -- $line)
+                set -l kv (string split -m 1 = -- $line)
+                if test (count $kv) -eq 2
+                    set -gx $kv[1] (string trim -- $kv[2])
+                end
+            end
+            if set -q GEMINI_API_KEY; and not set -q GOOGLE_API_KEY
+                set -gx GOOGLE_API_KEY $GEMINI_API_KEY
+            end
         end
 
         if command -v starship >/dev/null
