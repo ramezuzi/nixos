@@ -104,6 +104,16 @@
             require_repo = true;
             ignore_timeout = true;
           };
+
+          # Nix language indicator (starship has no built-in `nix` module).
+          nix = {
+            description = "Display the Nix symbol when a .nix file is present";
+            when = "ls *.nix >/dev/null 2>&1";
+            command = "nix --version 2>/dev/null | cut -d' ' -f3";
+            symbol = "󱄅";
+            style = "bold blue";
+            format = "[ $symbol( $output) ]($style)";
+          };
         };
 
         git_branch = {
