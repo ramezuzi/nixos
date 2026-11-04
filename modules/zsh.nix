@@ -52,6 +52,7 @@
         ls = "eza --git";
         ll = "eza -l --git";
         lt = "eza --tree";
+        l = "ls -alh"; # same as NixOS's fish default (`alias l 'ls -alh'`)
 
         # Quick config edits
         vf = "hx ~/nixos/flake.nix";
