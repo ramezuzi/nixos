@@ -15,7 +15,6 @@
       extraConfig = ''
         source-file ${tmuxConfig}
         run-shell ${pkgs.tmuxPlugins.online-status.rtp}
-        run-shell ${pkgs.tmuxPlugins.battery.rtp}
       '';
     };
   };
