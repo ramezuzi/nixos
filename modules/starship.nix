@@ -411,16 +411,19 @@
                     format = "[ $symbol$number ]($style)";
                 };
                 cmd_duration = {
-                    symbol = "󱎫";
-                    format = "[ $symbol$duration ]($style)";
+                    format = "[ 󱎫 $duration ]($style)";
                 };
                 battery = {
-                    symbol = "󰁹";
+                    full_symbol = "󰁹 ";
+                    charging_symbol = "󰂄 ";
+                    discharging_symbol = "󰂃 ";
+                    unknown_symbol = "󰂑 ";
+                    empty_symbol = "󰁹 ";
                     format = "[ $symbol$percentage ]($style)";
                 };
                 hostname = {
-                    symbol = "󰌗";
-                    format = "[ $symbol$hostname ]($style)";
+                    ssh_symbol = "󰌗 ";
+                    format = "[ $ssh_symbol$hostname ]($style)";
                 };
                 sudo = {
                     symbol = "󰒘";
