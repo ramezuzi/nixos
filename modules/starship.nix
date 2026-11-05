@@ -179,6 +179,7 @@
                     ];
                 };
                 c = {
+                    disabled = false;
                     symbol = " ";
                     format = "[ $symbol( $version) ]($style)";
                 };
@@ -217,6 +218,7 @@
                 };
                 # More languages & runtimes
                 cpp = {
+                    disabled = false;
                     symbol = "";
                     format = "[ $symbol( $version) ]($style)";
                 };
@@ -276,6 +278,11 @@
                     symbol = "";
                     format = "[ $symbol( $version) ]($style)";
                 };
+                odin = {
+                    disabled = false;
+                    symbol = "Ø ";
+                    format = "[ $symbol( $version) ]($style)";
+                };
                 zig = {
                     symbol = "";
                     format = "[ $symbol( $version) ]($style)";
@@ -289,6 +296,7 @@
                     format = "[ $symbol( $version) ]($style)";
                 };
                 fennel = {
+                    disabled = false;
                     symbol = "";
                     format = "[ $symbol( $version) ]($style)";
                 };
