@@ -55,7 +55,11 @@
                     vimcmd_symbol = "[: ](bold fg:yellow)";
                 };
 
-                package.disabled = false;
+                package = {
+                    disabled = false;
+                    symbol = "󰏓";
+                    format = "[ $symbol$version ]($style)";
+                };
 
                 time = {
                     disabled = true;
@@ -166,10 +170,14 @@
                     symbol = "";
                     format = "[ $symbol( $version) ]($style)";
                 };
-                bun.detect_files = [
-                    "bun.lock"
-                    "bun.lockb"
-                ];
+                bun = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                    detect_files = [
+                        "bun.lock"
+                        "bun.lockb"
+                    ];
+                };
                 c = {
                     symbol = " ";
                     format = "[ $symbol( $version) ]($style)";
@@ -207,6 +215,246 @@
                     symbol = "";
                     format = "[ $symbol( $context) ]($style)";
                 };
+                # More languages & runtimes
+                cpp = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                dotnet = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                ruby = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                elixir = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                erlang = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                elm = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                crystal = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                scala = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                swift = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                dart = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                lua = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                perl = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                julia = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                nim = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                ocaml = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                zig = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                haxe = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                purescript = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                fennel = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                solidity = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                deno = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                rlang = {
+                    symbol = "󰟔";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                typst = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                fortran = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                vlang = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                gleam = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                cobol = {
+                    symbol = "󰒓";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                daml = {
+                    symbol = "󰘧";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                raku = {
+                    symbol = "󱖉";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                mojo = {
+                    symbol = "󰈸";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                red = {
+                    symbol = "󰔷";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                quarto = {
+                    symbol = "󰍔";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+
+                # Language toolchains & dev tools
+                kubernetes = {
+                    symbol = "";
+                    format = "[ $symbol( $context) ]($style)";
+                };
+                terraform = {
+                    symbol = "";
+                    format = "[ $symbol( $workspace) ]($style)";
+                };
+                aws = {
+                    symbol = "";
+                    format = "[ $symbol( $profile) ]($style)";
+                };
+                gcloud = {
+                    symbol = "";
+                    format = "[ $symbol( $account) ]($style)";
+                };
+                azure = {
+                    symbol = "";
+                    format = "[ $symbol( $subscription) ]($style)";
+                };
+                helm = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                gradle = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                maven = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                cmake = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                vagrant = {
+                    symbol = "";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+                conda = {
+                    symbol = "";
+                    format = "[ $symbol( $environment) ]($style)";
+                };
+                nix_shell = {
+                    symbol = "";
+                    format = "[ $symbol$state ]($style)";
+                };
+                memory_usage = {
+                    symbol = "󰍛";
+                    format = "[ $symbol$ram ]($style)";
+                };
+                jobs = {
+                    symbol = "󰒓";
+                    format = "[ $symbol$number ]($style)";
+                };
+                cmd_duration = {
+                    symbol = "󱎫";
+                    format = "[ $symbol$duration ]($style)";
+                };
+                battery = {
+                    symbol = "󰁹";
+                    format = "[ $symbol$percentage ]($style)";
+                };
+                hostname = {
+                    symbol = "󰌗";
+                    format = "[ $symbol$hostname ]($style)";
+                };
+                sudo = {
+                    symbol = "󰒘";
+                    format = "[ $symbol ]($style)";
+                };
+                status = {
+                    symbol = "󰀦";
+                    format = "[ $symbol$status ]($style)";
+                };
+                openstack = {
+                    symbol = "";
+                    format = "[ $symbol$cloud ]($style)";
+                };
+                pulumi = {
+                    symbol = "";
+                    format = "[ $symbol$stack ]($style)";
+                };
+                spack = {
+                    symbol = "";
+                    format = "[ $symbol$environment ]($style)";
+                };
+                nats = {
+                    symbol = "󰒊";
+                    format = "[ $symbol$name ]($style)";
+                };
+                container = {
+                    symbol = "󰆦";
+                    format = "[ $symbol$name ]($style)";
+                };
+                guix_shell = {
+                    symbol = "";
+                    format = "[ $symbol ]($style)";
+                };
+                meson = {
+                    symbol = "󰆦";
+                    format = "[ $symbol$project ]($style)";
+                };
+                xmake = {
+                    symbol = "󰆦";
+                    format = "[ $symbol( $version) ]($style)";
+                };
+
             };
         };
 
