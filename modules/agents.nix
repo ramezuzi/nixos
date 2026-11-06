@@ -57,7 +57,6 @@
       agents.droid
       agents.eca
       agents.forgecode
-      agents.gemini-cli
       agents.goose-cli
       agents.grok
       agents.grok-bot
@@ -104,7 +103,6 @@
       agents.kandev-desktop
       agents.multica
       agents.multica-desktop
-      agents.oh-my-opencode
       agents.openhands-agent-canvas
       agents.orca
       agents.paperclip
@@ -218,7 +216,6 @@
       agents.ori
       agents.picoclaw
       agents.pool
-      agents.semble
       agents.sidecar
       agents.site
       agents.skills
@@ -235,6 +232,21 @@
     home.sessionPath = [
       "${config.home.homeDirectory}/.local/share/pnpm/bin"
     ];
+
+    # Claude Code Router gateway — lets Claude Code talk to OpenRouter/free models
+    # without an Anthropic subscription. Management UI: http://127.0.0.1:3458
+    systemd.user.services.claude-code-router = {
+      Unit = {
+        Description = "Claude Code Router gateway";
+        After = ["network.target"];
+      };
+      Service = {
+        ExecStart = "${inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.claude-code-router}/bin/ccr serve --no-open --host 127.0.0.1 --port 3458";
+        Restart = "on-failure";
+        RestartSec = 3;
+      };
+      Install.WantedBy = ["default.target"];
+    };
 
     # Local free inference — start on login; pull models yourself (`ollama pull …`).
     systemd.user.services.ollama = {

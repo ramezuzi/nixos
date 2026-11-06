@@ -44,6 +44,16 @@ def load_keys(ai_keys: Path) -> tuple[dict[str, str], list[str]]:
         order.append("GOOGLE_API_KEY")
         keys["GOOGLE_API_KEY"] = keys["GEMINI_API_KEY"]
 
+    # Tools that expect the same upstream key under their own variable name.
+    aliases = {
+        "OPENCODE_ZEN_API_KEY": "OPENCODE_API_KEY",
+        "HAX_ANTHROPIC_API_KEY": "OPENROUTER_API_KEY",
+    }
+    for alias, source in aliases.items():
+        if source in keys and alias not in keys:
+            order.append(alias)
+            keys[alias] = keys[source]
+
     return keys, order
 
 
