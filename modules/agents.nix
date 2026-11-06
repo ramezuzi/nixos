@@ -241,7 +241,11 @@
         After = ["network.target"];
       };
       Service = {
-        ExecStart = "${inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.claude-code-router}/bin/ccr serve --no-open --host 127.0.0.1 --port 3458";
+        # The nixpkgs/llm-agents 3.1.3 build crashes on startup: its bundled
+        # better-sqlite3 12.11.1 aborts under Node 24 (RemoveEnvironmentCleanupHook
+        # assertion). The npm-installed copy in ~/.local/share/ccr3 is built
+        # correctly, so run that until the package is fixed upstream.
+        ExecStart = "${pkgs.nodejs}/bin/node ${config.home.homeDirectory}/.local/share/ccr3/node_modules/@musistudio/claude-code-router/dist/main/cli.js serve --no-open --host 127.0.0.1 --port 3458";
         Restart = "on-failure";
         RestartSec = 3;
       };
