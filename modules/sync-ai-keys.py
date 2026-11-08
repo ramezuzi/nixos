@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
-"""Sync ~/.config/ai-keys/env into shell credentials + environment.d.
+"""Sync AI API keys into shell credentials + environment.d.
+
+Source resolution order:
+  1. $SOPS_AI_KEYS (explicit override)
+  2. /run/secrets/ai-keys-env (sops-nix decrypted secret)
+  3. ~/.config/ai-keys/env (legacy plaintext fallback)
 
 Keeps secrets out of the Nix store. Invoked by home-manager activation.
 Writes:
   ~/.config/ai-agents/credentials.fish
   ~/.config/ai-agents/credentials.zsh
-  ~/.config/environment.d/50-ai-keys.conf -> ../ai-keys/env
+  ~/.config/environment.d/50-ai-keys.conf -> resolved source
 """
 
 from __future__ import annotations
@@ -57,9 +62,22 @@ def load_keys(ai_keys: Path) -> tuple[dict[str, str], list[str]]:
     return keys, order
 
 
+def resolve_source(home: Path) -> Path | None:
+    override = os.environ.get("SOPS_AI_KEYS")
+    if override:
+        path = Path(override).expanduser()
+        return path if path.is_file() else None
+
+    sops_secret = Path("/run/secrets/ai-keys-env")
+    if sops_secret.is_file():
+        return sops_secret
+
+    legacy = home / ".config/ai-keys/env"
+    return legacy if legacy.is_file() else None
+
+
 def main() -> int:
     home = Path(os.environ.get("HOME", Path.home()))
-    ai_keys = home / ".config/ai-keys/env"
     cred_dir = home / ".config/ai-agents"
     env_dir = home / ".config/environment.d"
     cred_fish = cred_dir / "credentials.fish"
@@ -69,18 +87,22 @@ def main() -> int:
     cred_dir.mkdir(parents=True, exist_ok=True)
     env_dir.mkdir(parents=True, exist_ok=True)
 
-    if not ai_keys.is_file():
-        print(f"NOTE: {ai_keys} missing — create it with KEY=value lines (mode 600).")
+    ai_keys = resolve_source(home)
+    if ai_keys is None:
+        print(
+            "NOTE: no AI key source found — expected /run/secrets/ai-keys-env "
+            "(sops-nix) or ~/.config/ai-keys/env (mode 600)."
+        )
         return 0
 
     keys, order = load_keys(ai_keys)
 
     fish_lines = [
-        "# Generated from ~/.config/ai-keys/env — do not commit",
+        f"# Generated from {ai_keys} — do not commit",
         "# Sourced by programs.fish (login + interactive).",
     ]
     zsh_lines = [
-        "# Generated from ~/.config/ai-keys/env — do not commit",
+        f"# Generated from {ai_keys} — do not commit",
         "# Sourced by programs.zsh (.zshenv + .zshrc).",
     ]
     for key in order:
@@ -94,8 +116,11 @@ def main() -> int:
 
     if env_link.exists() or env_link.is_symlink():
         env_link.unlink()
-    env_link.symlink_to("../ai-keys/env")
-    print(f"synced AI keys → {cred_fish}, {cred_zsh}, and {env_link}")
+    if ai_keys.is_absolute() and not ai_keys.is_relative_to(home):
+        env_link.symlink_to(ai_keys)
+    else:
+        env_link.symlink_to(os.path.relpath(ai_keys, env_dir))
+    print(f"synced AI keys ({ai_keys}) → {cred_fish}, {cred_zsh}, and {env_link}")
     return 0
 
 

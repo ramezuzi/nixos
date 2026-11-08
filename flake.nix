@@ -50,6 +50,11 @@
     coding-agents.url = "github:kissgyorgy/coding-agents";
     hermes-agent.url = "github:NousResearch/hermes-agent/v2026.7.20";
     artcraft.url = "github:applicative-systems/artcraft-nix";
+
+    sops-nix = {
+      url = "git+https://github.com/Mic92/sops-nix?rev=89a234ce2daf6e568a7d4b4fe250afdd23d84e20";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);

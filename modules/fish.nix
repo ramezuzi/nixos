@@ -72,21 +72,29 @@
         set -l ai_agents_credentials "$HOME/.config/ai-agents/credentials.fish"
         if test -r "$ai_agents_credentials"
             source "$ai_agents_credentials"
-        else if test -r "$HOME/.config/ai-keys/env"
-            # Fallback: parse KEY=value from ai-keys/env into fish globals.
-            for line in (cat $HOME/.config/ai-keys/env)
-                set -l line (string trim -- $line)
-                if test -z "$line"; or string match -q '#*' -- $line
-                    continue
-                end
-                set -l line (string replace -r '^export\s+' ''' -- $line)
-                set -l kv (string split -m 1 = -- $line)
-                if test (count $kv) -eq 2
-                    set -gx $kv[1] (string trim -- $kv[2])
-                end
+        else
+            set -l ai_keys_source
+            if test -r /run/secrets/ai-keys-env
+                set ai_keys_source /run/secrets/ai-keys-env
+            else if test -r "$HOME/.config/ai-keys/env"
+                set ai_keys_source "$HOME/.config/ai-keys/env"
             end
-            if set -q GEMINI_API_KEY; and not set -q GOOGLE_API_KEY
-                set -gx GOOGLE_API_KEY $GEMINI_API_KEY
+            if set -q ai_keys_source
+                # Fallback: parse KEY=value from the resolved key file into fish globals.
+                for line in (cat $ai_keys_source)
+                    set -l line (string trim -- $line)
+                    if test -z "$line"; or string match -q '#*' -- $line
+                        continue
+                    end
+                    set -l line (string replace -r '^export\s+' ''' -- $line)
+                    set -l kv (string split -m 1 = -- $line)
+                    if test (count $kv) -eq 2
+                        set -gx $kv[1] (string trim -- $kv[2])
+                    end
+                end
+                if set -q GEMINI_API_KEY; and not set -q GOOGLE_API_KEY
+                    set -gx GOOGLE_API_KEY $GEMINI_API_KEY
+                end
             end
         end
       '';

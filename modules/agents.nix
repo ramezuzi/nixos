@@ -266,8 +266,10 @@
       Install.WantedBy = ["default.target"];
     };
 
-    # Keep fish/zsh + systemd environment.d wired to ~/.config/ai-keys/env without
-    # putting secrets into the Nix store. Generates credentials.{fish,zsh}.
+    # Keep fish/zsh + systemd environment.d wired to the sops-nix secret
+    # (/run/secrets/ai-keys-env) without putting secrets into the Nix store.
+    # Falls back to ~/.config/ai-keys/env if the secret is unavailable.
+    # Generates credentials.{fish,zsh}.
     home.activation.syncAiKeys = lib.hm.dag.entryAfter ["writeBoundary"] ''
       ${pkgs.python3}/bin/python3 ${./sync-ai-keys.py}
     '';

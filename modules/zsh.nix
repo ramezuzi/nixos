@@ -83,10 +83,18 @@
       # Load API keys for all zsh invocations (including non-interactive agents).
       envExtra = ''
         # Keep provider credentials out of Nix and the dotfiles repository.
-        # Prefer credentials.zsh; fall back to sourcing ~/.config/ai-keys/env.
+        # Prefer generated credentials.zsh; then the sops-nix secret; then the
+        # legacy plaintext file.
         ai_agents_credentials="$HOME/.config/ai-agents/credentials.zsh"
         if [[ -r "$ai_agents_credentials" ]]; then
           source "$ai_agents_credentials"
+        elif [[ -r /run/secrets/ai-keys-env ]]; then
+          set -a
+          source /run/secrets/ai-keys-env
+          set +a
+          if [[ -n "''${GEMINI_API_KEY-}" && -z "''${GOOGLE_API_KEY-}" ]]; then
+            export GOOGLE_API_KEY="$GEMINI_API_KEY"
+          fi
         elif [[ -r "$HOME/.config/ai-keys/env" ]]; then
           set -a
           source "$HOME/.config/ai-keys/env"

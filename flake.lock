@@ -1294,9 +1294,31 @@
         "nixpkgs": "nixpkgs_5",
         "nur": "nur",
         "nvf": "nvf",
+        "sops-nix": "sops-nix",
         "stylix": "stylix",
         "woomer": "woomer",
         "zen-browser": "zen-browser"
+      }
+    },
+    "sops-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793995029,
+        "narHash": "sha256-ZlE4BtMjWhfC6rFXLO9Qimn36Ene1INqCgKDDvazjhc=",
+        "ref": "refs/heads/master",
+        "rev": "89a234ce2daf6e568a7d4b4fe250afdd23d84e20",
+        "revCount": 1266,
+        "type": "git",
+        "url": "https://github.com/Mic92/sops-nix"
+      },
+      "original": {
+        "rev": "89a234ce2daf6e568a7d4b4fe250afdd23d84e20",
+        "type": "git",
+        "url": "https://github.com/Mic92/sops-nix"
       }
     },
     "stylix": {

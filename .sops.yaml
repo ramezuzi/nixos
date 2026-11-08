@@ -1,0 +1,8 @@
+keys:
+  - &ramez age1lsgl6m0md7evwkf8p2sah4xxckfpg9wp8dvl276374pw5pfnkdmqrm4eq6
+
+creation_rules:
+  - path_regex: secrets/.*\.bin$
+    key_groups:
+      - age:
+          - *ramez
