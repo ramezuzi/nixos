@@ -1,9 +1,12 @@
 {
-  flake.nixosModules.services = {pkgs, ...}: {
+  flake.nixosModules.services = {pkgs, config, lib, ...}: {
     services.upower.enable = true;
     hardware.bluetooth.enable = true;
     services.blueman.enable = true;
-    services.tlp.enable = true;
+
+    # Ryoku ships and enables power-profiles-daemon, which conflicts with TLP.
+    # Keep TLP for non-Ryoku hosts so the option can be flipped back.
+    services.tlp.enable = lib.mkIf (!config.programs.ryoku.enable) true;
     services.logind.settings.Login.HandleLidSwitch = "suspend";
 
     environment.systemPackages = with pkgs; [

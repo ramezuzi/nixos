@@ -1,7 +1,7 @@
 # modules/ukishima.nix
 {
   flake.nixosModules.ukishima =
-    { pkgs, ... }:
+    { config, lib, pkgs, ... }:
     let
       ukishima = pkgs.stdenv.mkDerivation {
         pname = "ukishima";
@@ -40,6 +40,18 @@
       };
     in
     {
-      environment.systemPackages = [ ukishima ];
+      options.programs.ukishima.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Install the ukishima Quickshell desktop. Disabled by default while
+          Ryoku is the primary desktop; the derivation is kept so it can be
+          re-enabled without restoring code.
+        '';
+      };
+
+      config = lib.mkIf config.programs.ukishima.enable {
+        environment.systemPackages = [ ukishima ];
+      };
     };
 }

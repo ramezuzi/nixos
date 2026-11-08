@@ -8,9 +8,14 @@
     home.packages = let
       agents =
         inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
+      # Newer llm-agents revision that carries the Herdr GUI (herdr-app).
+      herdrAgents =
+        inputs.llm-agents-herdr.packages.${pkgs.stdenv.hostPlatform.system};
     in [
       # Existing tools
       agents.herdr
+      herdrAgents.herdr-app
+      herdrAgents.herdr-core
       agents.opencode
       agents.gemini-cli
       agents.qwen-code
