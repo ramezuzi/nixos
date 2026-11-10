@@ -46,15 +46,15 @@
                         neovide_theme = "auto";
 
                         # Keep animations quick on a laptop.
-                        neovide_cursor_animation_length = 0.08;
-                        neovide_cursor_trail_size = 0.4;
+                        # neovide_cursor_animation_length = 0.08;
+                        # neovide_cursor_trail_size = 0.4;
                         neovide_cursor_animate_in_insert_mode = true;
                         neovide_cursor_animate_command_line = true;
-                        neovide_scroll_animation_length = 0.18;
-                        neovide_scroll_animation_far_lines = 8;
+                        # neovide_scroll_animation_length = 0.18;
+                        # neovide_scroll_animation_far_lines = 8;
 
-                        neovide_cursor_vfx_mode = "railgun";
-                        neovide_cursor_vfx_opacity = 0.5;
+                        # neovide_cursor_vfx_mode = "railgun";
+                        # neovide_cursor_vfx_opacity = 0.5;
                     };
                 };
             };
