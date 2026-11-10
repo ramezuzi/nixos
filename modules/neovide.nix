@@ -37,7 +37,7 @@
 
                     # Neovide reads these as g:neovide_* inside the nvf-built config.
                     globals = {
-                        neovide_scale_factor = 0.8;
+                        neovide_scale_factor = 0.9;
                         neovide_opacity = 1.0;
                         neovide_confirm_quit = false;
                         neovide_fullscreen = false;
