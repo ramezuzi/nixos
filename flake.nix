@@ -56,13 +56,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Ryoku desktop (Hyprland + niri + MangoWM). Keep Ryoku's own package pin
-    # from its flake; only its unused compatibility nixpkgs input follows ours.
-    ryoku = {
-      url = "git+https://github.com/Ryoku-dev/Ryoku-on-NixOS?rev=035d112b78cac22c6e7b8a6762f9edf51ca70d68";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Herdr GUI (herdr-app) is newer than the llm-agents revision this flake
     # uses for the rest of the agent toolchain. Build just this package against
     # the host nixpkgs.

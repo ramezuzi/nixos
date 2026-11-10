@@ -1,7 +1,7 @@
 # modules/ukishima.nix
 {
   flake.nixosModules.ukishima =
-    { config, lib, pkgs, ... }:
+    { pkgs, ... }:
     let
       ukishima = pkgs.stdenv.mkDerivation {
         pname = "ukishima";
@@ -40,17 +40,6 @@
       };
     in
     {
-      options.programs.ukishima.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-        description = ''
-          Install the ukishima Quickshell desktop. Enabled by default now that
-          Ryoku is disabled again; the derivation stays available when off.
-        '';
-      };
-
-      config = lib.mkIf config.programs.ukishima.enable {
-        environment.systemPackages = [ ukishima ];
-      };
+      environment.systemPackages = [ ukishima ];
     };
 }

@@ -15,10 +15,8 @@
 
     security.polkit.enable = true;
 
-    # ── Portals ─────────────────────────────────────────────────────────
-    # Ryoku owns the portal stack (including its ABI-matched Hyprland portal)
-    # when enabled. Keep this only for a non-Ryoku host.
-    xdg.portal = lib.mkIf (!config.programs.ryoku.enable) {
+    # ── Portals: hyprland FIRST, gtk fallback ─────────────────────────
+    xdg.portal = {
       enable = true;
       extraPortals = with pkgs; [
         xdg-desktop-portal-hyprland
@@ -41,13 +39,15 @@
       HYPRCURSOR_SIZE = "20";
     };
 
-    environment.systemPackages =
-      with pkgs; [
-        # ── Hyprland essentials ─────────────────────────────────────────
-        libnotify
-        ddcutil
-        hyprsunset
-        hyprpicker # Wayland color picker
+    environment.systemPackages = with pkgs; [
+      # ── Hyprland essentials ─────────────────────────────────────────
+      hyprland
+      xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gtk
+      libnotify
+      ddcutil
+      hyprsunset
+      hyprpicker # Wayland color picker
 
       # ── Idle + lock ─────────────────────────────────────────────────
       hypridle
@@ -67,22 +67,31 @@
       brightnessctl # brightness keys
       pamixer # volume control
 
-        # ── Wallpaper, notifications, audio ─────────────────────────────
-        awww
-        wireplumber
-        cliphist
-        udiskie
-      ]
-      # Ryoku pins its own ABI-matched Hyprland and portal packages. Adding the
-      # host copies would put a mismatched hyprctl/portal on PATH.
-      ++ lib.optionals (!config.programs.ryoku.enable) (with pkgs; [
-        hyprland
-        xdg-desktop-portal-hyprland
-        xdg-desktop-portal-gtk
-      ]);
+      # ── Wallpaper, notifications, audio ─────────────────────────────
+      awww
+      wireplumber
+      cliphist
+      udiskie
+    ];
 
-    # Config files under ~/.config/hypr are materialized by Ryoku and are
-    # intentionally not managed by Home Manager, so edits/reloads remain
-    # ordinary Linux edits instead of requiring a rebuild.
+    # ── Live-editable Hyprland config symlink ─────────────────────────
+    system.activationScripts.hyprConfig = lib.stringAfter ["specialfs"] ''
+      mkdir -p /run/hypr
+      ln -sfn /home/ramez/.config/hypr /run/hypr/config
+    '';
+  };
+
+  # ── Home Manager module ────────────────────────────────────────────────
+  flake.homeManagerModules.hyprland = {
+    config,
+    lib,
+    pkgs,
+    ...
+  }: {
+    home.file.".config/hypr/hyprland.lua".source =
+      config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/dotfiles/.config/hypr/hyprland.lua";
+
+    home.file.".config/hypr/modules".source =
+      config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/dotfiles/.config/hypr/modules";
   };
 }
