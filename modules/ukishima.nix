@@ -42,11 +42,10 @@
     {
       options.programs.ukishima.enable = lib.mkOption {
         type = lib.types.bool;
-        default = false;
+        default = true;
         description = ''
-          Install the ukishima Quickshell desktop. Disabled by default while
-          Ryoku is the primary desktop; the derivation is kept so it can be
-          re-enabled without restoring code.
+          Install the ukishima Quickshell desktop. Enabled by default now that
+          Ryoku is disabled again; the derivation stays available when off.
         '';
       };
 

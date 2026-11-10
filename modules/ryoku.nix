@@ -7,7 +7,9 @@
     imports = [ inputs.ryoku.nixosModules.default ];
 
     programs.ryoku = {
-      enable = true;
+      # Disabled: Ryoku's shell is too heavy for this laptop. The module and
+      # flake input stay wired up so it can be re-enabled by flipping this.
+      enable = false;
 
       # Both Ryoku sessions are deployed. This only picks the session the
       # display manager preselects; switch compositor from Ryoku Hub or the
