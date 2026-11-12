@@ -66,6 +66,7 @@
       # ── Hardware controls ───────────────────────────────────────────
       brightnessctl # brightness keys
       pamixer # volume control
+      playerctl # XF86Audio* media keys (hyprland.lua binds them)
 
       # ── Wallpaper, notifications, audio ─────────────────────────────
       awww

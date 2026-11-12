@@ -1,0 +1,147 @@
+// niri — mirrors ~/.config/hypr/hyprland.lua (SUPER keys, minimal look,
+// colemak-dh-ortho). ukishima is intentionally not started here for now.
+//
+// Anything not set here falls back to niri's own defaults; the defaults that
+// already match the Hyprland setup (Mod+WheelScroll* workspace switching,
+// Mod+V floating, Mod+Q close, media keys, screenshot UI, ...) are listed
+// explicitly below so the file reads as the mirror it is.
+//
+// Validate with: niri validate -c ~/.config/niri/config.kdl
+
+environment {
+    XCURSOR_SIZE "20"
+}
+
+input {
+    keyboard {
+        xkb {
+            layout "us"
+            variant "colemak_dh_ortho"
+            options "caps:escape"
+        }
+    }
+    touchpad {
+        // Hyprland: tap on, dwt on, natural_scroll false (niri defaults match)
+        tap
+        dwt
+    }
+    // Hyprland follow_mouse = 1
+    focus-follows-mouse
+}
+
+// Hyprland: gaps_in/out = 0, border_size = 0, rounding = 0, opacity 1,
+// shadow/blur off, animations.enabled = false.
+layout {
+    gaps 0
+    // hyprland.lua scrolling layout: column_width = 1
+    default-column-width {
+        proportion 1.0
+    }
+    focus-ring {
+        off
+    }
+    border {
+        off
+    }
+    shadow {
+        off
+    }
+}
+
+animations {
+    off
+}
+
+// keep the startup screen clean like Hyprland (SUPER+Shift+/ still shows it)
+hotkey-overlay {
+    skip-at-startup
+}
+
+// same daemons hyprland.lua autostarts, minus ukishima. The polkit
+// authentication agent is not listed here: the NixOS niri module wires
+// niri.service → xdg-desktop-autostart.target, which runs the polkit-gnome
+// autostart entry with an absolute path (verified via systemd-xdg-autostart-
+// generator). mango gets its own exec_once instead — it has no session
+// systemd integration.
+spawn-at-startup "awww-daemon"
+spawn-at-startup "hypridle"
+
+binds {
+    // ── apps — same chords as hyprland.lua ────────────────────────────────
+    Mod+Return { spawn "kitty"; }
+    Mod+Shift+E { spawn "dolphin"; } // Hyprland SUPER+E (uppercase ⇒ Shift)
+    Mod+R { spawn "rofi" "-show" "drun"; }
+
+    // ── window state ──────────────────────────────────────────────────────
+    Mod+Q repeat=false { close-window; }
+    Mod+Shift+Q { quit; } // Hyprland SUPER+SHIFT+Q
+    Mod+V { toggle-window-floating; }
+    Mod+F { fullscreen-window; }
+
+    // ── focus — colemak arrows (n = left, o = right, i = up, e = down) ────
+    Mod+N { focus-column-left; }
+    Mod+O { focus-column-right; }
+    Mod+I { focus-window-up; }
+    Mod+E { focus-window-down; }
+
+    // ── layout / column controls ──────────────────────────────────────────
+    // Hyprland SUPER+H cycles layouts; switch-preset-column-width is the
+    // scrolling-layout equivalent.
+    Mod+H { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-column-width-back; }
+    Mod+P { expand-column-to-available-width; }
+    Mod+J { toggle-column-tabbed-display; }
+
+    // ── overview (Hyprland SUPER+S special workspace has no direct twin) ──
+    Mod+S repeat=false { toggle-overview; }
+
+    // ── workspaces (Hyprland SUPER+num / SUPER+SHIFT+num) ─────────────────
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+0 { focus-workspace 10; }
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+4 { move-column-to-workspace 4; }
+    Mod+Shift+5 { move-column-to-workspace 5; }
+    Mod+Shift+6 { move-column-to-workspace 6; }
+    Mod+Shift+7 { move-column-to-workspace 7; }
+    Mod+Shift+8 { move-column-to-workspace 8; }
+    Mod+Shift+9 { move-column-to-workspace 9; }
+    Mod+Shift+0 { move-column-to-workspace 10; }
+
+    // ── scroll through workspaces (Hyprland SUPER+wheel) ──────────────────
+    Mod+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp cooldown-ms=150 { focus-workspace-up; }
+
+    // ── multimedia keys (same commands as hyprland.lua) ───────────────────
+    XF86AudioRaiseVolume allow-when-locked=true repeat=true {
+        spawn-sh "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
+    }
+    XF86AudioLowerVolume allow-when-locked=true repeat=true {
+        spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+    }
+    XF86AudioMute allow-when-locked=true repeat=true {
+        spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+    }
+    XF86AudioMicMute allow-when-locked=true repeat=true {
+        spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+    }
+    XF86MonBrightnessUp allow-when-locked=true repeat=true {
+        spawn-sh "brightnessctl -e4 -n2 set 5%+"
+    }
+    XF86MonBrightnessDown allow-when-locked=true repeat=true {
+        spawn-sh "brightnessctl -e4 -n2 set 5%-"
+    }
+    XF86AudioNext allow-when-locked=true { spawn-sh "playerctl next"; }
+    XF86AudioPause allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioPlay allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioPrev allow-when-locked=true { spawn-sh "playerctl previous"; }
+}
