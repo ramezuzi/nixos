@@ -99,6 +99,17 @@
 
       # ---- New Tools ----
 
+      # Small utilities (2026-11 audit)
+      tree
+      mosh # ssh that survives wifi drops / roaming
+      rclone # universal cloud sync
+      sshfs # mount remote filesystems over ssh
+      watchexec # rerun commands on file change
+      entr # lighter file-watch alternative
+      hyperfine # command benchmarking
+      tokei # code statistics
+      difftastic # syntax-aware diffs (wire up with: git config --global diff.tool difftastic)
+
       zenith # TUI system monitor with disk/network graphs
       bandwhich # Network usage per process
       iotop # IO monitoring
@@ -141,7 +152,10 @@
       glow
       chafa
       asciinema
-      just
     ];
+
+    # mise: per-project language versions (python/go/node), activated
+    # automatically in zsh and fish by home-manager.
+    programs.mise.enable = true;
   };
 }
