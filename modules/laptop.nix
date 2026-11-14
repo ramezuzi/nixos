@@ -16,17 +16,7 @@
     nix.settings.max-jobs = 4;
     nix.settings.cores = 4;
 
-    # ── Binary caches (numtide + nixos) ───────────────────────
-    nix.settings.substituters = [
-      "https://cache.nixos.org"
-      "https://cache.numtide.com"
-      "https://numtide.cachix.org"
-    ];
-    nix.settings.trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
-      "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-    ];
+    # Binary caches are consolidated in nix-settings.nix.
 
     # Compressed RAM swap
     zramSwap = {
@@ -61,14 +51,8 @@
     services.gvfs.enable = true;
     services.udisks2.enable = true;
     programs.dconf.enable = true;
-    fonts.fontconfig.enable = true;
+    # Fonts (packages + fontconfig tuning) live in fonts.nix.
 
-    fonts.packages = with pkgs; [
-      noto-fonts # Broad unicode coverage
-      noto-fonts-cjk-sans # Chinese, Japanese, Korean
-      liberation_ttf # Arial/Times New Roman replacements for apps/web
-      font-awesome # Extra icons for various apps
-    ];
     # Wayland utilities
     environment.systemPackages = with pkgs; [
       brightnessctl

@@ -28,7 +28,9 @@
 
     nix.gc = {
       automatic = true;
-      dates = "daily";
+      # Fixed time, not "daily": "daily" fires at midnight and the catch-up
+      # run made nix-gc occupy the first 30s after boot.
+      dates = "03:00";
       options = "--delete-older-than 3d";
     };
   };

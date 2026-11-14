@@ -4,7 +4,7 @@
     hardware.bluetooth.enable = true;
     services.blueman.enable = true;
     services.tlp.enable = true;
-    services.logind.settings.Login.HandleLidSwitch = "suspend";
+    # Lid behavior (incl. external power / docked) is set in laptop.nix.
 
     environment.systemPackages = with pkgs; [
       cliphist
