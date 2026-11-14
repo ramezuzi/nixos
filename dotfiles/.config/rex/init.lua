@@ -1,0 +1,8 @@
+-- ~/.config/rex/init.lua — read by the Rex server, not by the client app.
+--
+-- After editing:
+--   rex config check    # load the file, report errors, change nothing
+--   rex config reload   # apply it (Rex does not watch the file)
+--
+-- A bad call is skipped and the rest of the file still loads.
+-- Binds land on top of Rex's defaults; the server owns config, not the app.
