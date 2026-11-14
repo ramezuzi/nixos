@@ -56,14 +56,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Rex (Superlogical) — terminal multiplexer, prebuilt binary via their
-    # channel flake. preview = tagged previews; snapshot = every change.
-    # Update with: nix flake update rex
-    rex = {
-      url = "https://pkgs.superlogical.com/rex/nix/preview.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Herdr GUI (herdr-app) is newer than the llm-agents revision this flake
     # uses for the rest of the agent toolchain. Build just this package against
     # the host nixpkgs.
