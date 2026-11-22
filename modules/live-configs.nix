@@ -4,6 +4,11 @@
 # repo working tree under configs/, and ~/.config points straight at them
 # with out-of-store symlinks (home-manager's mkOutOfStoreSymlink).
 #
+# The whole directory is linked, not individual files: the GUI editors
+# (nirimod) write atomically via temp-file + rename and create sibling
+# files such as profiles/ and includes. A directory link keeps every write
+# inside the repo working tree instead of replacing a file-level symlink.
+#
 # Edit ~/.config/niri/config.kdl or ~/.config/mango/*.conf directly:
 #   - niri reloads its config automatically on save
 #   - mango: SUPER+CTRL+R reloads the config
@@ -11,15 +16,10 @@
 {
   flake.homeModules.liveConfigs = { config, ... }: {
     home.file = {
-      ".config/niri/config.kdl".source =
-        config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/configs/niri/config.kdl";
-
-      ".config/mango/config.conf".source =
-        config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/configs/mango/config.conf";
-      ".config/mango/env.conf".source =
-        config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/configs/mango/env.conf";
-      ".config/mango/rules.conf".source =
-        config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/configs/mango/rules.conf";
+      ".config/niri".source =
+        config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/configs/niri";
+      ".config/mango".source =
+        config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/configs/mango";
     };
   };
 }

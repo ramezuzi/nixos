@@ -21,7 +21,11 @@
       
       # File Managers
       nautilus
-      
+
+      # Compositor config GUIs (edit live configs, no rebuild)
+      hyprmod # GTK4/libadwaita settings app for Hyprland (Lua-aware)
+      nirimod # GTK4/libadwaita settings app for niri (validates every save)
+
       # System Utilities
       btop
       pavucontrol
