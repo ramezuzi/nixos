@@ -9,9 +9,18 @@
   flake.homeModules.fish = { pkgs, ... }: {
     programs.fish = {
       enable = true;
+      # Keep eza and our own shortcuts as abbreviations instead of aliases,
+      # so fish's abbreviation expansion is the single source of truth.
+      preferAbbrs = true;
 
       # Only essential aliases
       shellAbbrs = {
+        # Directory navigation
+        ".." = "cd ..";
+        "..." = "cd ../..";
+        "...." = "cd ../../..";
+        "....." = "cd ../../../..";
+
         # NixOS
         nfu = "nix flake update";
 
@@ -50,7 +59,8 @@
         find = "fd";
         ls = "eza --git";
         ll = "eza -l --git";
-        lt = "eza --tree";
+        # Tree + long format + hidden files, like `ls -la` but recursive.
+        lt = "eza --tree --long --all --git --icons --group-directories-first .";
         l = "ls -alh"; # same as NixOS's fish default (`alias l 'ls -alh'`)
 
         # Quick config edits

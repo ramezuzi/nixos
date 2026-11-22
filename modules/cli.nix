@@ -145,6 +145,8 @@
       uv-sort
       ruff
       tealdeer
+      cheat # local cheat sheets (cheat.sh-style)
+      navi # interactive cheatsheet browser (fzf-powered)
       dust
       bottom
       delta
@@ -157,5 +159,13 @@
     # mise: per-project language versions (python/go/node), activated
     # automatically in zsh and fish by home-manager.
     programs.mise.enable = true;
+
+    # Carapace: command-argument completion for zsh/fish (nix, git, docker,
+    # kubectl, ssh, etc.). Home Manager wires it into both shells.
+    programs.carapace = {
+      enable = true;
+      enableZshIntegration = true;
+      enableFishIntegration = true;
+    };
   };
 }
