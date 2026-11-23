@@ -23,7 +23,7 @@
       # Dynamic path: uses your custom file for Berlin, otherwise built-in themes
       schemePath =
         if theme == "berlin" then
-          ../dotfiles/themes/berlin.yaml
+          ../../../dotfiles/themes/berlin.yaml
         else
           "${pkgs.base16-schemes}/share/themes/${theme}.yaml";
     in

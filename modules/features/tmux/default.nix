@@ -6,7 +6,7 @@
       builtins.replaceStrings
         [ "@base00@" ]
         [ config.lib.stylix.colors.withHashtag.base00 ]
-        (builtins.readFile ../dotfiles/tmux/tmux.conf)
+        (builtins.readFile ../../../dotfiles/tmux/tmux.conf)
     );
   in {
     programs.tmux = {

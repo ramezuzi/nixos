@@ -1,8 +1,9 @@
-# modules/live-configs.nix
+# modules/system/desktop/live-configs.nix
 #
-# Configs that must be editable in place without a rebuild. They live in the
-# repo working tree under configs/, and ~/.config points straight at them
-# with out-of-store symlinks (home-manager's mkOutOfStoreSymlink).
+# Configs that must be editable in place without a rebuild.  They live next to
+# their feature module (modules/features/niri/config, modules/features/mango/
+# config) and ~/.config points straight at them with out-of-store symlinks
+# (home-manager's mkOutOfStoreSymlink).
 #
 # The whole directory is linked, not individual files: the GUI editors
 # (nirimod) write atomically via temp-file + rename and create sibling
@@ -17,9 +18,9 @@
   flake.homeModules.liveConfigs = { config, ... }: {
     home.file = {
       ".config/niri".source =
-        config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/configs/niri";
+        config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/modules/features/niri/config";
       ".config/mango".source =
-        config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/configs/mango";
+        config.lib.file.mkOutOfStoreSymlink "/home/ramez/nixos/modules/features/mango/config";
     };
   };
 }

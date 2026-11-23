@@ -6,13 +6,13 @@
     sops = {
       # The encrypted env file lives in the repository. The age private key
       # stays on the machine at ~/.config/sops/age/keys.txt.
-      defaultSopsFile = ../secrets/ai-keys.bin;
+      defaultSopsFile = ./ai-keys.bin;
       defaultSopsFormat = "binary";
       age.keyFile = "/home/ramez/.config/sops/age/keys.txt";
 
       secrets.ai-keys-env = {
         format = "binary";
-        sopsFile = ../secrets/ai-keys.bin;
+        sopsFile = ./ai-keys.bin;
         path = "/run/secrets/ai-keys-env";
         owner = "ramez";
         group = "users";

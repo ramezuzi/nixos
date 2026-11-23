@@ -5,7 +5,7 @@
     imports = [ inputs.homini.nixosModules.homini ];
     homini = {
       enable = true;
-      dir = ../dotfiles;
+      dir = ../../../dotfiles;
     };
   };
 }
