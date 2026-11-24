@@ -6,8 +6,8 @@
   osConfig,
   ...
 }: let
-  # Determine the flake path for nixd integration
-  flakePath = "~/nixos"; # Change this if your flake is elsewhere
+  # nixd requires an absolute flake path; a leading ~ is not expanded.
+  flakePath = "/home/ramez/nixos";
   hostName = config.networking.hostName or "zbook";
 in {
   flake.homeModules.helix = {pkgs, ...}: {
@@ -36,6 +36,16 @@ in {
         lua-language-server # Lua
         jdt-language-server # Java (if needed)
         zls # Zig (if needed)
+        basedpyright # Python type checking + completion (ruff does lint/format)
+        fish-lsp # Fish shell
+        clang-tools # clangd + clang-format for C/C++
+        neocmakelsp # CMake
+        sqls # SQL
+        just-lsp # Justfile
+        vue-language-server # Vue (vtsls already references this package for its plugin)
+        fish # fish_indent formatter (fish-lsp bundles its own fish for parsing)
+        python3 # interpreter used by basedpyright
+        zig # zls needs the zig binary; also used by zig fmt
 
         # Formatters
         nixfmt # Nix formatter (RFC style)
@@ -45,6 +55,7 @@ in {
         prettierd # Prettier daemon for JS/TS/JSON/YAML
         stylua # Lua formatting
         black # Python formatting
+        kdlfmt # KDL (niri config)
         gofumpt # Go formatting
         rustfmt # Rust formatting
 
@@ -98,6 +109,13 @@ in {
           auto-format = true;
           idle-timeout = 50;
         };
+
+        # Tab opens the completion menu.  Once the menu is open Helix handles
+        # Tab/Shift-Tab itself to cycle entries.  Ctrl-t inserts a real tab.
+        keys.insert = {
+          tab = "completion";
+          "C-t" = "insert_tab";
+        };
       };
 
       # Language configurations
@@ -113,6 +131,29 @@ in {
             command = "vscode-json-language-server";
             args = ["--stdio"];
           };
+
+          # Basedpyright supplies Python completion, hover and type checking.
+          # Ruff remains in the server list for lint diagnostics.
+          basedpyright = {
+            command = "basedpyright-langserver";
+            args = ["--stdio"];
+            config = {
+              basedpyright = {
+                analysis = {
+                  typeCheckingMode = "standard";
+                  autoSearchPaths = true;
+                  useLibraryCodeForTypes = true;
+                };
+              };
+            };
+          };
+
+          # SQL (sqls starts fine without a config; add connections later in
+          # ~/.config/sqls/config.yml if schema-aware completion is wanted).
+          sqls = {
+            command = "sqls";
+          };
+
           # Nixd configuration for NixOS
           nixd = {
             command = "nixd";
@@ -247,13 +288,26 @@ in {
             };
           }
 
+          # CMake
+          {
+            name = "cmake";
+            language-servers = ["neocmakelsp"];
+          }
+
+          # SQL
+          {
+            name = "sql";
+            language-servers = ["sqls"];
+          }
+
           # Python
           {
             name = "python";
-            language-servers = ["ruff"];
+            language-servers = ["ruff" "basedpyright"];
             auto-format = true;
             formatter = {
               command = "${lib.getExe pkgs.black}";
+              args = ["-"];
             };
           }
 
@@ -266,7 +320,7 @@ in {
               command = "${lib.getExe pkgs.prettierd}";
               args = [
                 "--stdin-filepath"
-                "filename"
+                "%{buffer_name}"
               ];
             };
           }
@@ -278,7 +332,43 @@ in {
               command = "${lib.getExe pkgs.prettierd}";
               args = [
                 "--stdin-filepath"
-                "filename"
+                "%{buffer_name}"
+              ];
+            };
+          }
+          {
+            name = "tsx";
+            language-servers = ["vtsls"];
+            auto-format = true;
+            formatter = {
+              command = "${lib.getExe pkgs.prettierd}";
+              args = [
+                "--stdin-filepath"
+                "%{buffer_name}"
+              ];
+            };
+          }
+          {
+            name = "jsx";
+            language-servers = ["vtsls"];
+            auto-format = true;
+            formatter = {
+              command = "${lib.getExe pkgs.prettierd}";
+              args = [
+                "--stdin-filepath"
+                "%{buffer_name}"
+              ];
+            };
+          }
+          {
+            name = "vue";
+            language-servers = ["vuels"];
+            auto-format = true;
+            formatter = {
+              command = "${lib.getExe pkgs.prettierd}";
+              args = [
+                "--stdin-filepath"
+                "%{buffer_name}"
               ];
             };
           }
@@ -306,7 +396,7 @@ in {
               command = "${lib.getExe pkgs.prettierd}";
               args = [
                 "--stdin-filepath"
-                "filename"
+                "%{buffer_name}"
               ];
             };
           }
@@ -320,9 +410,16 @@ in {
               command = "${lib.getExe pkgs.prettierd}";
               args = [
                 "--stdin-filepath"
-                "filename"
+                "%{buffer_name}"
               ];
             };
+          }
+
+          # HTML (vscode-html already provides completion/formatting; do not
+          # require superhtml, which Helix also lists by default)
+          {
+            name = "html";
+            language-servers = ["vscode-html-language-server"];
           }
 
           # Dockerfile
