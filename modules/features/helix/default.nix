@@ -47,6 +47,10 @@ in {
         python3 # interpreter used by basedpyright
         zig # zls needs the zig binary; also used by zig fmt
 
+        # Debug adapters (DAP)
+        lldb # lldb-dap for C/C++/Rust/Zig
+        delve # dlv for Go
+
         # Formatters
         nixfmt # Nix formatter (RFC style)
         alejandra # Nix formatter (alternative)
