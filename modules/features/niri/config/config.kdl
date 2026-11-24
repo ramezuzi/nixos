@@ -7,6 +7,7 @@
 // explicitly below so the file reads as the mirror it is.
 //
 // Validate with: niri validate -c ~/.config/niri/config.kdl
+prefer-no-csd
 
 environment {
     XCURSOR_SIZE "20"
@@ -27,6 +28,10 @@ input {
     }
     // Hyprland follow_mouse = 1
     focus-follows-mouse
+
+    mouse
+
+    trackpoint
 }
 
 // Hyprland: gaps_in/out = 0, border_size = 0, rounding = 0, opacity 1,
@@ -69,12 +74,14 @@ spawn-at-startup "hypridle"
 binds {
     // ── apps — same chords as hyprland.lua ────────────────────────────────
     Mod+Return { spawn "kitty"; }
-    Mod+Shift+E { spawn "dolphin"; } // Hyprland SUPER+E (uppercase ⇒ Shift)
+    Mod+Shift+E { spawn "dolphin"; }
+ // Hyprland SUPER+E (uppercase ⇒ Shift)
     Mod+R { spawn "rofi" "-show" "drun"; }
 
     // ── window state ──────────────────────────────────────────────────────
     Mod+Q repeat=false { close-window; }
-    Mod+Shift+Q { quit; } // Hyprland SUPER+SHIFT+Q
+    Mod+Shift+Q { quit; }
+ // Hyprland SUPER+SHIFT+Q
     Mod+V { toggle-window-floating; }
     Mod+F { fullscreen-window; }
 
@@ -144,4 +151,8 @@ binds {
     XF86AudioPause allow-when-locked=true { spawn-sh "playerctl play-pause"; }
     XF86AudioPlay allow-when-locked=true { spawn-sh "playerctl play-pause"; }
     XF86AudioPrev allow-when-locked=true { spawn-sh "playerctl previous"; }
+}
+
+window-rule {
+    opacity 0.92
 }
