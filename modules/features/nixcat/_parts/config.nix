@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   vim = {
     # Keep nixcat's runtime directories separate from the existing `nvf` app.
     appname = "nixcat";
@@ -45,15 +45,15 @@
 
     spellcheck = {
       enable = true;
-      languages = ["en"];
+      languages = [ "en" ];
       programmingWordlist.enable = true;
     };
 
     theme = {
       enable = true;
-      name = "catppuccin";
-      style = "mocha";
-      transparent = false;
+      name = "rose-pine";
+      # style = "mocha";
+      transparent = true;
     };
 
     diagnostics = {
@@ -63,7 +63,9 @@
         underline = true;
         update_in_insert = false;
         severity_sort = true;
-        float = {border = "rounded";};
+        float = {
+          border = "rounded";
+        };
       };
     };
 
@@ -164,9 +166,9 @@
     diagnostics.nvim-lint = {
       enable = true;
       linters_by_ft = {
-        javascript = ["eslint_d"];
-        javascriptreact = ["eslint_d"];
-        typescriptreact = ["eslint_d"];
+        javascript = [ "eslint_d" ];
+        javascriptreact = [ "eslint_d" ];
+        typescriptreact = [ "eslint_d" ];
       };
     };
 
@@ -175,8 +177,10 @@
       extensions = [
         {
           name = "fzf";
-          packages = [pkgs.vimPlugins.telescope-fzf-native-nvim];
-          setup.fzf = {fuzzy = true;};
+          packages = [ pkgs.vimPlugins.telescope-fzf-native-nvim ];
+          setup.fzf = {
+            fuzzy = true;
+          };
         }
       ];
     };
@@ -261,7 +265,7 @@
       cheatsheet.enable = true;
     };
 
-    statusline.lualine.enable = true;
+    statusline.lualine.enable = false;
     tabline.nvimBufferline.enable = true;
     dashboard.alpha.enable = true;
     notify.nvim-notify.enable = true;
