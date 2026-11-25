@@ -1,18 +1,18 @@
 scheme: "Primeagen"
-author: "Primeagen Stream Palette"
-base00: "0e0e0e"
-base01: "161616"
-base02: "262626"
-base03: "5c5855"
-base04: "9e9b93"
-base05: "d8d4c8"
-base06: "e6e2d6"
-base07: "f2efe6"
-base08: "d98c7c"
-base09: "ff966c"
-base0A: "ffc86f"
-base0B: "d4a359"
-base0C: "8abeb7"
-base0D: "c9a896"
-base0E: "f4988c"
-base0F: "8c7f70"
+author: "Exact Monochrome + Gold/Coral Accents"
+base00: "0e0e0e" # Main background
+base01: "161616" # Status bar / darker surface
+base02: "262626" # Visual selection highlight
+base03: "6e6a63" # Line numbers & comments
+base04: "9e9b93" # Subtle UI text
+base05: "d8d4c8" # Main code text (warm cream)
+base06: "e6e2d6" # Bright text
+base07: "f2efe6" # Lightest text
+base08: "d8d4c8" # Variables / identifiers -> cream (not pink!)
+base09: "e5b567" # Numbers / booleans -> warm gold
+base0A: "d8d4c8" # Types / Structs (MyTemplate) -> cream
+base0B: "e5b567" # Strings ("index.html") -> warm gold
+base0C: "d98c7c" # Attributes / Macros (#[tokio::main]) -> muted coral
+base0D: "d8d4c8" # Functions (handler, main) -> cream
+base0E: "d8d4c8" # Keywords (use, async, fn, let, return) -> cream
+base0F: "9e9b93" # Punctuation / brackets -> muted gray
