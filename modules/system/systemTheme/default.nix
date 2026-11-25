@@ -12,8 +12,8 @@
       # ═══════════════════════════════════════════════════════════
       theme = "rose-pine"; # Switch between "berlin", "primeagen", or any built-in theme
 
-      myFont = "JetBrainsMono Nerd Font";
-      myFontPkg = pkgs.nerd-fonts.ioseveka-mono;
+      myFont = "Iosevka Nerd Font";
+      myFontPkg = pkgs.nerd-fonts.iosevka;
       sansFont = "Noto Sans";
       serifFont = "Noto Serif";
       sansFontPkg = pkgs.noto-fonts;
