@@ -10,10 +10,10 @@
       # ═══════════════════════════════════════════════════════════
       # 🎨 CHANGE YOUR THEME AND FONT HERE
       # ═══════════════════════════════════════════════════════════
-      theme = "primeagen"; # Switch between "berlin", "primeagen", or any built-in theme
+      theme = "rose-pine"; # Switch between "berlin", "primeagen", or any built-in theme
 
       myFont = "JetBrainsMono Nerd Font";
-      myFontPkg = pkgs.nerd-fonts.jetbrains-mono;
+      myFontPkg = pkgs.nerd-fonts.ioseveka-mono;
       sansFont = "Noto Sans";
       serifFont = "Noto Serif";
       sansFontPkg = pkgs.noto-fonts;
