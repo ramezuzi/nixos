@@ -52,7 +52,7 @@
     theme = {
       enable = true;
       name = "rose-pine";
-      # style = "mocha";
+      style = "main";
       transparent = true;
     };
 
