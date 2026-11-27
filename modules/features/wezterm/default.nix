@@ -6,6 +6,12 @@
         local wezterm = require("wezterm")
         local config = wezterm.config_builder()
 
+        -- Disable 24-bit RGB across the board.
+        config.term = "xterm-256color"
+        config.set_environment_variables = {
+          COLORTERM = "disabled",
+        }
+
         -- Font: same as your other terminals (JetBrainsMono Nerd Font, size 12)
         config.font = wezterm.font("JetBrainsMono Nerd Font")
         config.font_size = 12.0

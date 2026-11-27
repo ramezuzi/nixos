@@ -82,7 +82,6 @@
 
     treesitter = {
       enable = true;
-      fold = true;
       highlight.enable = true;
       indent.enable = true;
       context.enable = true;
@@ -219,7 +218,6 @@
     };
     fzf-lua.enable = true;
 
-    filetree.neo-tree.enable = true;
     utility = {
       oil-nvim.enable = true;
       surround.enable = true;
@@ -276,8 +274,6 @@
     projects.project-nvim.enable = true;
     session.persisted.enable = true;
     runner.run-nvim.enable = true;
-    # codewindow is not wired up in this nvf revision; minimap-vim is.
-    minimap.minimap-vim.enable = true;
 
     debugger.nvim-dap = {
       enable = true;
@@ -294,37 +290,40 @@
 
     binds = {
       whichKey.enable = true;
-      hardtime-nvim.enable = true;
+      # Hardtime disables the mouse by default, which also makes bufferline
+      # tabs unclickable. Keep the key-repeat guard, but keep mouse support.
+      hardtime-nvim = {
+        enable = true;
+        setupOpts.disable_mouse = false;
+      };
       cheatsheet.enable = true;
     };
 
     statusline.lualine.enable = false;
-    tabline.nvimBufferline.enable = true;
+    tabline.nvimBufferline = {
+      enable = true;
+      # Keep the tab bar plain, like the existing nvf config.
+      setupOpts.options.numbers = "none";
+    };
     dashboard.alpha.enable = true;
-    notify.nvim-notify.enable = true;
 
     # Primeagen's signature AI plugin. Authenticate once with `:Copilot auth`.
     assistant.copilot.enable = true;
 
     ui = {
-      noice.enable = true;
       borders.enable = true;
       colorizer.enable = true;
       illuminate.enable = true;
-      dropbar-nvim.enable = true;
       fastaction.enable = true;
-      modes-nvim.enable = true;
       zen-nvim.enable = true;
       smartcolumn.enable = true;
       colorful-menu-nvim.enable = true;
     };
 
     visuals = {
-      fidget-nvim.enable = true;
       indent-blankline.enable = true;
       hlargs-nvim.enable = true;
       rainbow-delimiters.enable = true;
-      satellite-nvim.enable = true;
       twilight-nvim.enable = true;
       neoscroll-nvim.enable = true;
       highlight-undo.enable = true;
@@ -376,8 +375,8 @@
       {
         mode = "n";
         key = "<leader>e";
-        action = "<cmd>Neotree toggle<cr>";
-        desc = "Toggle file tree";
+        action = "<cmd>lua vim.diagnostic.open_float()<cr>";
+        desc = "Show line diagnostics";
       }
       {
         mode = "n";

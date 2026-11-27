@@ -4,6 +4,10 @@
     programs.alacritty = {
       enable = true;
       settings = {
+        env = {
+          TERM = "xterm-256color";
+          COLORTERM = "disabled";
+        };
         general.live_config_reload = true;
         scrolling.history = 10000;
         selection.save_to_clipboard = true;

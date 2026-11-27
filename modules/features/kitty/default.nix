@@ -7,7 +7,11 @@
         enableFishIntegration = true;
         mode = "no-cursor";
       };
+      environment = {
+        COLORTERM = "disabled";
+      };
       settings = {
+        term = "xterm-256color";
         scrollback_lines = 10000;
         enable_audio_bell = false;
         confirm_os_window_close = 0;
