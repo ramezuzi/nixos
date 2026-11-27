@@ -1,17 +1,17 @@
 { inputs, self, ... }: {
 
-  flake.homeModules.zen = { ... }: {
+    flake.homeModules.zen = { ... }: {
 
-    imports = [
-      inputs.zen-browser.homeModules.beta
-    ];
+        imports = [
+            inputs.zen-browser.homeModules.beta
+        ];
 
-    programs.zen-browser = {
-      enable = true;
+        programs.zen-browser = {
+            enable = true;
+        };
+        stylix.targets.zen-browser = {
+            enable = false;
+            profileNames = [ "9sdaj60q.Default Profile" ];
+        };
     };
-    stylix.targets.zen-browser = {
-      enable = true;
-      profileNames = [ "9sdaj60q.Default Profile" ];
-    };
-  };
 }
