@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ lib, pkgs, ... }: {
   vim = {
     # Keep nixcat's runtime directories separate from the existing `nvf` app.
     appname = "nixcat";
@@ -36,6 +36,17 @@
       mouse = "a";
       confirm = true;
     };
+
+    # Binaries used by plugins and pickers that are not LSP/formatter presets.
+    # nvf puts these on the wrapper PATH.
+    extraPackages = with pkgs; [
+      fd
+      fzf
+      gh
+      hunk
+      ripgrep
+      yazi
+    ];
 
     clipboard = {
       enable = true;
@@ -107,24 +118,46 @@
         templ
       ];
 
-      textobjects = {
-        enable = true;
-        setupOpts = {
-          select = {
-            enable = true;
-            lookahead = true;
-            keymaps = {
-              af = "@function.outer";
-              "if" = "@function.inner";
-              ac = "@class.outer";
-              ic = "@class.inner";
-              aa = "@parameter.outer";
-              ia = "@parameter.inner";
-            };
-          };
-        };
-      };
+      # nvf's textobjects option still calls the old nvim-treesitter config
+      # API, which is a no-op in the pinned nvim-treesitter. Use the plugin's
+      # current API directly and bind the mappings below.
+      textobjects.enable = false;
     };
+
+    startPlugins = [ "nvim-treesitter-textobjects" ];
+    pluginRC.nixcat-treesitter-textobjects = lib.nvim.dag.entryAnywhere ''
+      require("nvim-treesitter-textobjects").setup({
+        select = { lookahead = true },
+        move = { set_jumps = true },
+      })
+
+      local ts_select = require("nvim-treesitter-textobjects.select")
+      local ts_move = require("nvim-treesitter-textobjects.move")
+
+      local function select_object(lhs, query, desc)
+        vim.keymap.set({ "x", "o" }, lhs, function()
+          ts_select.select_textobject(query, "textobjects")
+        end, { desc = desc })
+      end
+
+      select_object("af", "@function.outer", "Select outer function")
+      select_object("if", "@function.inner", "Select inner function")
+      select_object("ac", "@class.outer", "Select outer class")
+      select_object("ic", "@class.inner", "Select inner class")
+      select_object("aa", "@parameter.outer", "Select outer parameter")
+      select_object("ia", "@parameter.inner", "Select inner parameter")
+
+      local function goto_object(lhs, fn, query, desc)
+        vim.keymap.set({ "n", "x", "o" }, lhs, function()
+          ts_move[fn](query, "textobjects")
+        end, { desc = desc })
+      end
+
+      goto_object("]f", "goto_next_start", "@function.outer", "Next function start")
+      goto_object("]F", "goto_next_end", "@function.outer", "Next function end")
+      goto_object("[f", "goto_previous_start", "@function.outer", "Previous function start")
+      goto_object("[F", "goto_previous_end", "@function.outer", "Previous function end")
+    '';
 
     # Completion + snippets.
     autocomplete.blink-cmp = {
