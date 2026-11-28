@@ -35,6 +35,14 @@
           };
           spellcheck.enable = true;
 
+          # Rose Pine main, matching nixcat and the Arch setup. Truecolor stays
+          # on; tmux converts it to 256 colors when RGB is disabled.
+          theme = {
+            enable = true;
+            name = "rose-pine";
+            style = "main";
+          };
+
           diagnostics = {
             enable = true;
             config = {

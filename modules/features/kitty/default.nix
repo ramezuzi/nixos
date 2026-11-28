@@ -7,11 +7,10 @@
         enableFishIntegration = true;
         mode = "no-cursor";
       };
-      environment = {
-        COLORTERM = "disabled";
-      };
       settings = {
         term = "xterm-256color";
+        # Bare `env COLORTERM` removes it from child processes.
+        env = "COLORTERM";
         scrollback_lines = 10000;
         enable_audio_bell = false;
         confirm_os_window_close = 0;
