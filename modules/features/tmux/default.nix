@@ -1,13 +1,9 @@
 { ... }:
 {
-  flake.homeModules.tmux = { pkgs, config, ... }:
+  flake.homeModules.tmux = { pkgs, ... }:
   let
-    tmuxConfig = pkgs.writeText "tmux.conf" (
-      builtins.replaceStrings
-        [ "@base00@" ]
-        [ config.lib.stylix.colors.withHashtag.base00 ]
-        (builtins.readFile ../../../dotfiles/tmux/tmux.conf)
-    );
+    tmuxConfig = pkgs.writeText "tmux.conf"
+      (builtins.readFile ../../../dotfiles/tmux/tmux.conf);
   in {
     programs.tmux = {
       enable = true;

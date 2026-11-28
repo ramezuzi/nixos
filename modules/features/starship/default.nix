@@ -1,6 +1,6 @@
 { ... }:
 {
-    flake.homeModules.starship = { config, ... }: {
+    flake.homeModules.starship = { ... }: {
         programs.starship = {
             enable = true;
             settings = {
@@ -13,15 +13,21 @@
                 format = "$directory\${custom.giturl}$git_branch\${custom.git_worktree}$git_status$line_break$character";
                 right_format = "$all";
 
+                # ANSI color names only, so prompts stay readable with
+                # COLORTERM disabled and never require 24-bit RGB.
                 palettes.custom1 = {
-                    base = config.lib.stylix.colors.withHashtag.base00;
-                    surface0 = config.lib.stylix.colors.withHashtag.base01;
-                    text = config.lib.stylix.colors.withHashtag.base05;
-                    teal = config.lib.stylix.colors.withHashtag.base0C;
-                    lavender = config.lib.stylix.colors.withHashtag.base0D;
-                    mauve = config.lib.stylix.colors.withHashtag.base0E;
-                    peach = config.lib.stylix.colors.withHashtag.base09;
-                    foam = config.lib.stylix.colors.withHashtag.base0B;
+                    base = "black";
+                    surface0 = "bright-black";
+                    text = "white";
+                    teal = "cyan";
+                    lavender = "bright-blue";
+                    mauve = "magenta";
+                    peach = "yellow";
+                    foam = "bright-cyan";
+                    green = "green";
+                    blue = "blue";
+                    red = "red";
+                    yellow = "yellow";
                 };
 
                 directory = {
@@ -469,6 +475,5 @@
             };
         };
 
-        stylix.targets.starship.enable = false; # palette.custom1 above already comes from stylix's colors — leave the auto-target off so it doesn't also try to inject its own
     };
 }

@@ -16,7 +16,7 @@
         config.font = wezterm.font("JetBrainsMono Nerd Font")
         config.font_size = 12.0
 
-        -- Opacity: match your Stylix opacity setting (0.98)
+        -- Slight transparency, matching the other terminals.
         config.window_background_opacity = 0.98
         config.text_background_opacity = 1.0
 
@@ -33,8 +33,7 @@
         config.default_cursor_style = "SteadyBlock"
         config.cursor_blink_rate = 800
 
-        -- Colors: Stylix injects these automatically via the generated config.
-        -- Don't set color_scheme here or it will override Stylix.
+        -- Colors: inherit the terminal's ANSI palette; no RGB theme injected.
 
         -- Hide the tab bar (single-window user)
         config.hide_tab_bar_if_only_one_tab = true

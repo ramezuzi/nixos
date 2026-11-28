@@ -27,7 +27,7 @@ modules/
 │   ├── network/
 │   ├── nix-ld/
 │   ├── services/    # printing, podman, libvirt, bluetooth/power services
-│   └── systemTheme/ # stylix + fonts
+│   └── fonts/       # font packages + fontconfig
 ├── hosts/
 │   └── zbook/       # host composition + hardware config
 └── parts.nix

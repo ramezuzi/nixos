@@ -8,7 +8,7 @@
             settings = {
                 term = "xterm-256color";
                 env = [ "COLORTERM=disabled" ];
-                background = 000000;
+                background = "000000";
                 background-opacity = 0.85;
                 background-blur = false;
                 scrollback-limit = 10000000;

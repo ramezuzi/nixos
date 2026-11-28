@@ -9,9 +9,5 @@
         programs.zen-browser = {
             enable = true;
         };
-        stylix.targets.zen-browser = {
-            enable = false;
-            profileNames = [ "9sdaj60q.Default Profile" ];
-        };
     };
 }

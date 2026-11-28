@@ -29,7 +29,7 @@
                 home.packages = [ neovide ];
 
                 programs.nvf.settings.vim = {
-                    # Matches the terminal font/size from stylix and wezterm.
+                    # Matches the terminal font/size from wezterm.
                     opts = {
                         guifont = "JetBrainsMono Nerd Font:h12";
                         linespace = 1;

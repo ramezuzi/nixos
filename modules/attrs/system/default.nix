@@ -25,7 +25,6 @@
       printing
       services
       sops
-      stylix
       ramez
     ];
   };

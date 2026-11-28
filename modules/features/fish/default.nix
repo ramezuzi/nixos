@@ -70,7 +70,6 @@
         ve = "hx ~/nixos/modules/helix.nix";
         vfish = "hx ~/nixos/modules/fish.nix";
         vzsh = "hx ~/nixos/modules/zsh.nix";
-        vs = "hx ~/nixos/modules/stylix.nix";
 
         # nh
         nh = "nh os switch ~/nixos --hostname zbook";
